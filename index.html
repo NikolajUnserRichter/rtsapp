@@ -80,6 +80,57 @@
             background-color: #1e3a8a;
             color: white;
         }
+
+        .no-data-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .no-data-icon {
+            font-size: 5rem;
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .no-data-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .no-data-text {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .no-data-instructions {
+            background-color: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 600px;
+            text-align: left;
+            border-radius: 8px;
+        }
+
+        .no-data-instructions h6 {
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .no-data-instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .no-data-instructions li {
+            margin-bottom: 8px;
+            color: #374151;
+        }
     </style>
 </head>
 <body>
@@ -248,10 +299,27 @@
             container.innerHTML = '';
             if (ordersData.length === 0) {
                 container.innerHTML = `
-                    <div class="alert alert-danger" role="alert">
-                        <strong>Fehler:</strong> Es wurden keine Bestelldaten übergeben oder die Daten konnten nicht geladen werden.
-                        <br><br>
-                        Bitte wenden Sie sich an das Logistik-Team oder überprüfen Sie den Link.
+                    <div class="no-data-container">
+                        <div class="no-data-icon">📋</div>
+                        <div class="no-data-title">Keine Bestelldaten vorhanden</div>
+                        <div class="no-data-text">
+                            Es wurden keine Transportaufträge zur Bearbeitung gefunden.<br>
+                            Diese Seite kann nur über einen speziellen Link mit Bestelldaten aufgerufen werden.
+                        </div>
+                        
+                        <div class="no-data-instructions">
+                            <h6>📌 Was können Sie tun?</h6>
+                            <ul>
+                                <li>Überprüfen Sie, ob Sie den vollständigen Link aus Ihrer E-Mail verwendet haben</li>
+                                <li>Stellen Sie sicher, dass der Link nicht abgelaufen ist</li>
+                                <li>Wenden Sie sich an Ihr Logistik-Team, um einen neuen Link anzufordern</li>
+                                <li>Kontaktieren Sie den Support bei weiteren Fragen</li>
+                            </ul>
+                        </div>
+                        
+                        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 30px;">
+                            <strong>Hinweis:</strong> Diese Anwendung erfordert gültige Auftragsdaten in der URL
+                        </p>
                     </div>`;
                 document.querySelector('.btn-custom').disabled = true;
                 return;
@@ -291,7 +359,7 @@
             };
 
             // UPDATE THIS URL WITH YOUR FLOW 2 HTTP TRIGGER
-            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'
+            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/ma[...]
 
             try {
                 const response = await fetch(logicAppUrl, {
