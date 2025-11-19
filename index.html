@@ -1,395 +1,331 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Wagon Transport Order Confirmation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            min-height: 100vh;
-            background-color: #f4f7fa;
-            font-family: 'Montserrat', sans-serif;
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Wagon Transport Order Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #f4f7fa;
+            font-family: 'Montserrat', sans-serif;
+        }
 
-        .header-section {
-            background-color: #00002d;
-            color: white;
-            padding: 40px;
-            border-radius: 12px 12px 0 0;
-        }
-        
-        .header-section h1 {
-            font-weight: 700;
-            font-size: 2.5rem;
-        }
+        .header-section {
+            background-color: #00002d;
+            color: white;
+            padding: 40px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .header-section h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
 
-        .main-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin: 40px auto;
-            max-width: 1000px;
-        }
+        .main-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin: 40px auto;
+            max-width: 1000px;
+        }
 
-        .form-control, .form-select {
-            background-color: #f0f3f8;
-            border: 1px solid #d1d5db;
-            color: #1f2937;
-            font-weight: 500;
-            font-size: 1rem;
-            height: 44px;
-        }
+        .form-control, .form-select {
+            background-color: #f0f3f8;
+            border: 1px solid #d1d5db;
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 1rem;
+            height: 44px;
+        }
 
-        .form-label {
-            font-weight: 600;
-            color: #00002d;
-            margin-bottom: 5px;
-        }
-        
-        .order-card {
-            border: 1px solid #e5e7eb;
-            border-left: 5px solid #3b82f6;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-        }
+        .form-label {
+            font-weight: 600;
+            color: #00002d;
+            margin-bottom: 5px;
+        }
+        
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #3b82f6;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
 
-        .order-card h5 {
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f3f8;
-            padding-bottom: 5px;
-        }
+        .order-card h5 {
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f3f8;
+            padding-bottom: 5px;
+        }
 
-        .btn-custom {
-            background-color: #3b82f6;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 10px 30px;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
+        .btn-custom {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 30px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
 
-        .btn-custom:hover {
-            background-color: #1e3a8a;
-            color: white;
-        }
-
-        .no-data-container {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .no-data-icon {
-            font-size: 5rem;
-            color: #9ca3af;
-            margin-bottom: 20px;
-        }
-
-        .no-data-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-
-        .no-data-text {
-            font-size: 1.1rem;
-            color: #6b7280;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .no-data-instructions {
-            background-color: #f0f9ff;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            margin: 30px auto;
-            max-width: 600px;
-            text-align: left;
-            border-radius: 8px;
-        }
-
-        .no-data-instructions h6 {
-            font-weight: 700;
-            color: #1e40af;
-            margin-bottom: 15px;
-        }
-
-        .no-data-instructions ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .no-data-instructions li {
-            margin-bottom: 8px;
-            color: #374151;
-        }
-    </style>
+        .btn-custom:hover {
+            background-color: #1e3a8a;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-card">
-            <div class="header-section text-center">
-                <h1>Wagon Transport Order Editor <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
-                <p class="lead" style="color: #dbeafe;">Bitte überprüfen und bestätigen Sie die Liefer-/Abhol-Slots.</p>
-            </div>
+    <div class="container">
+        <div class="main-card">
+            <div class="header-section text-center">
+                <h1>Wagon Transport Order Editor <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
+                <p class="lead" style="color: #dbeafe;">Bitte überprüfen und bestätigen Sie die Liefer-/Abhol-Slots.</p>
+            </div>
 
-            <div class="p-4">
-                <form id="order-form">
-                    <div id="orders-container">
-                        <div class="alert alert-info" role="alert">Lade Bestelldaten...</div>
-                    </div>
+            <div class="p-4">
+                <form id="order-form">
+                    <div id="orders-container">
+                        <div class="alert alert-info" role="alert">Lade Bestelldaten...</div>
+                    </div>
 
-                    <div id="alert-container" class="mt-4"></div>
+                    <div id="alert-container" class="mt-4"></div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-custom mt-3">Aufträge bestätigen & an Logistik senden</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-custom mt-3">Aufträge bestätigen & an Logistik senden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        // No debug mode!
+    <script>
+        // No debug mode!
 
-        // Configuration (updated)
-        const CONFIG = {
-            profiles: ['G1', 'G2'],
-            wagonTypes: ['Offen', 'Geschlossen', 'Offen + Geschlossen'],
-            reasons: [
-                { value: 'None', text: '— Keine Unterlieferung —' },
-                { value: '01', text: '01 Fehlende Fahrzeuge (z.B. geringe Produktion,...)' },
-                { value: '02', text: '02 BMW AQ-Sperre' },
-                { value: '03', text: '03 Störungen in der Montage' },
-                { value: '04', text: '04 Technische Störungen BMW' },
-                { value: '05', text: '05 Falsche Waggongattung angeliefert' },
-                { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
-                { value: '07', text: '07 Ausrangierung Schadwaggons' }
-            ]
-        };
-        
-        function generateTimeSlots(intervalMinutes) {
-            const slots = [];
-            for (let h = 0; h < 24; h++) {
-                for (let m = 0; m < 60; m += intervalMinutes) {
-                    const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                    if (intervalMinutes === 15) {
-                        slots.push({ value: time, text: time });
-                    } else if (intervalMinutes === 120 && m === 0) {
-                        const nextHour = String((h + 2) % 24).padStart(2, '0');
-                        const slotText = `${time} - ${nextHour}:00`;
-                        slots.push({ value: slotText, text: slotText });
-                    }
-                }
-            }
-            return slots;
-        }
+        // Configuration (updated)
+        const CONFIG = {
+            profiles: ['G1', 'G2'],
+            wagonTypes: ['Offen', 'Geschlossen', 'Offen + Geschlossen'],
+            reasons: [
+                { value: 'None', text: '— Keine Unterlieferung —' },
+                { value: '01', text: '01 Fehlende Fahrzeuge (z.B. geringe Produktion,...)' },
+                { value: '02', text: '02 BMW AQ-Sperre' },
+                { value: '03', text: '03 Störungen in der Montage' },
+                { value: '04', text: '04 Technische Störungen BMW' },
+                { value: '05', text: '05 Falsche Waggongattung angeliefert' },
+                { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
+                { value: '07', text: '07 Ausrangierung Schadwaggons' }
+            ]
+        };
+        
+        function generateTimeSlots(intervalMinutes) {
+            const slots = [];
+            for (let h = 0; h < 24; h++) {
+                for (let m = 0; m < 60; m += intervalMinutes) {
+                    const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                    if (intervalMinutes === 15) {
+                        slots.push({ value: time, text: time });
+                    } else if (intervalMinutes === 120 && m === 0) {
+                        const nextHour = String((h + 2) % 24).padStart(2, '0');
+                        const slotText = `${time} - ${nextHour}:00`;
+                        slots.push({ value: slotText, text: slotText });
+                    }
+                }
+            }
+            return slots;
+        }
 
-        const arrivalSlots = generateTimeSlots(120);
-        const departureSlots = generateTimeSlots(15);
-        
-        function getOrdersFromUrl() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const encodedData = params.get('data');
-                if (!encodedData) {
-                    return [];
-                }
-                // Try to decode and parse
-                const jsonString = decodeURIComponent(encodedData);
-                const parsedData = JSON.parse(jsonString);
-                return Array.isArray(parsedData) ? parsedData : [parsedData];
-            } catch (e) {
-                console.error("Fehler beim Parsen der Bestelldaten:", e);
-                return [];
-            }
-        }
-        
-        function createOrderCard(order) {
-            const id = order.orderId || 'UNKNOWN';
-            
-            const profileOptions = CONFIG.profiles.map(p => 
-                `<option value="${p}" ${p === order.wagonProfile ? 'selected' : ''}>${p}</option>`
-            ).join('');
-            
-            const typeOptions = CONFIG.wagonTypes.map(t => 
-                `<option value="${t}" ${t === order.wagonType ? 'selected' : ''}>${t}</option>`
-            ).join('');
+        const arrivalSlots = generateTimeSlots(120);
+        const departureSlots = generateTimeSlots(15);
+        
+        function getOrdersFromUrl() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const encodedData = params.get('data');
+                if (!encodedData) {
+                    return [];
+                }
+                // Try to decode and parse
+                const jsonString = decodeURIComponent(encodedData);
+                const parsedData = JSON.parse(jsonString);
+                return Array.isArray(parsedData) ? parsedData : [parsedData];
+            } catch (e) {
+                console.error("Fehler beim Parsen der Bestelldaten:", e);
+                return [];
+            }
+        }
+        
+        function createOrderCard(order) {
+            const id = order.orderId || 'UNKNOWN';
+            
+            const profileOptions = CONFIG.profiles.map(p => 
+                `<option value="${p}" ${p === order.wagonProfile ? 'selected' : ''}>${p}</option>`
+            ).join('');
+            
+            const typeOptions = CONFIG.wagonTypes.map(t => 
+                `<option value="${t}" ${t === order.wagonType ? 'selected' : ''}>${t}</option>`
+            ).join('');
 
-            const reasonOptions = CONFIG.reasons.map(r => 
-                `<option value="${r.value}">${r.text}</option>`
-            ).join('');
+            const reasonOptions = CONFIG.reasons.map(r => 
+                `<option value="${r.value}">${r.text}</option>`
+            ).join('');
 
-            const arrivalOptions = arrivalSlots.map(s => 
-                `<option value="${s.value}">${s.text}</option>`
-            ).join('');
+            const arrivalOptions = arrivalSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
 
-            const departureOptions = departureSlots.map(s => 
-                `<option value="${s.value}">${s.text}</option>`
-            ).join('');
+            const departureOptions = departureSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
 
-            return `
-                <div class="order-card" data-order-id="${id}">
-                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
-                    <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
-                    <div class="row g-3">
-                        
-                        <div class="col-md-3">
-                            <label for="wagons-${id}" class="form-label">Wagons (Qty.)</label>
-                            <input type="number" class="form-control" id="wagons-${id}" name="wagons-${id}" value="${order.wagons || 1}" min="1" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="date-${id}" class="form-label">Transport Date</label>
-                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${order.transportDate || ''}" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="profile-${id}" class="form-label">Wagon Profile</label>
-                            <select class="form-select" id="profile-${id}" name="profile-${id}" required>
-                                ${profileOptions}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="type-${id}" class="form-label">Wagon Type</label>
-                            <select class="form-select" id="type-${id}" name="type-${id}" required>
-                                ${typeOptions}
-                            </select>
-                        </div>
+            return `
+                <div class="order-card" data-order-id="${id}">
+                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
+                    <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
+                    <div class="row g-3">
+                        
+                        <div class="col-md-3">
+                            <label for="wagons-${id}" class="form-label">Wagons (Qty.)</label>
+                            <input type="number" class="form-control" id="wagons-${id}" name="wagons-${id}" value="${order.wagons || 1}" min="1" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date-${id}" class="form-label">Transport Date</label>
+                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${order.transportDate || ''}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="profile-${id}" class="form-label">Wagon Profile</label>
+                            <select class="form-select" id="profile-${id}" name="profile-${id}" required>
+                                ${profileOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="type-${id}" class="form-label">Wagon Type</label>
+                            <select class="form-select" id="type-${id}" name="type-${id}" required>
+                                ${typeOptions}
+                            </select>
+                        </div>
 
-                        <div class="col-md-3">
-                            <label for="arrival-${id}" class="form-label">Arrival Time Slot (2h)</label>
-                            <select class="form-select" id="arrival-${id}" name="arrival-${id}" required>
-                                ${arrivalOptions}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="departure-${id}" class="form-label">Departure Time (15min)</label>
-                            <select class="form-select" id="departure-${id}" name="departure-${id}" required>
-                                ${departureOptions}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
-                            <select class="form-select" id="reason-${id}" name="reason-${id}" required>
-                                ${reasonOptions}
-                            </select>
-                        </div>
-                        
-                        <div class="col-12">
-                            <label for="comment-${id}" class="form-label">Comment (Free Text)</label>
-                            <textarea class="form-control" id="comment-${id}" name="comment-${id}" rows="2" placeholder="Freitextkommentar eingeben..."></textarea>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function loadForm() {
-            const ordersData = getOrdersFromUrl();
-            const container = document.getElementById('orders-container');
-            container.innerHTML = '';
-            if (ordersData.length === 0) {
-                container.innerHTML = `
-                    <div class="no-data-container">
-                        <div class="no-data-icon">📋</div>
-                        <div class="no-data-title">Keine Bestelldaten vorhanden</div>
-                        <div class="no-data-text">
-                            Es wurden keine Transportaufträge zur Bearbeitung gefunden.<br>
-                            Diese Seite kann nur über einen speziellen Link mit Bestelldaten aufgerufen werden.
-                        </div>
-                        
-                        <div class="no-data-instructions">
-                            <h6>📌 Was können Sie tun?</h6>
-                            <ul>
-                                <li>Überprüfen Sie, ob Sie den vollständigen Link aus Ihrer E-Mail verwendet haben</li>
-                                <li>Stellen Sie sicher, dass der Link nicht abgelaufen ist</li>
-                                <li>Wenden Sie sich an Ihr Logistik-Team, um einen neuen Link anzufordern</li>
-                                <li>Kontaktieren Sie den Support bei weiteren Fragen</li>
-                            </ul>
-                        </div>
-                        
-                        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 30px;">
-                            <strong>Hinweis:</strong> Diese Anwendung erfordert gültige Auftragsdaten in der URL
-                        </p>
-                    </div>`;
-                document.querySelector('.btn-custom').disabled = true;
-                return;
-            }
-            ordersData.forEach(order => {
-                container.innerHTML += createOrderCard(order);
-            });
-        }
+                        <div class="col-md-3">
+                            <label for="arrival-${id}" class="form-label">Arrival Time Slot (2h)</label>
+                            <select class="form-select" id="arrival-${id}" name="arrival-${id}" required>
+                                ${arrivalOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="departure-${id}" class="form-label">Departure Time (15min)</label>
+                            <select class="form-select" id="departure-${id}" name="departure-${id}" required>
+                                ${departureOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
+                            <select class="form-select" id="reason-${id}" name="reason-${id}" required>
+                                ${reasonOptions}
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="comment-${id}" class="form-label">Comment (Free Text)</label>
+                            <textarea class="form-control" id="comment-${id}" name="comment-${id}" rows="2" placeholder="Freitextkommentar eingeben..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadForm() {
+            const ordersData = getOrdersFromUrl();
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '';
+            if (ordersData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning" role="alert" style="padding: 30px; border-left: 5px solid #ffc107; border-radius: 8px;">
+                        <h4 class="alert-heading">⚠️ Keine Auftragsdaten gefunden!</h4>
+                        <p>Es sieht so aus, als ob der Link keine gültigen Bestelldaten für die Bearbeitung enthält.</p>
+                        <hr>
+                        <p class="mb-0">
+                            Bitte stellen Sie sicher, dass Sie den vollständigen Link aus der E-Mail oder dem Quellsystem verwendet haben.
+                            Bei weiteren Problemen kontaktieren Sie bitte **umgehend das Logistik-Team** unter Angabe des aktuellen Datums und der Uhrzeit.
+                        </p>
+                    </div>`;
+                document.querySelector('.btn-custom').disabled = true;
+                return;
+            }
+            ordersData.forEach(order => {
+                container.innerHTML += createOrderCard(order);
+            });
+        }
 
-        document.getElementById('order-form').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            
-            const ordersData = [];
-            const orderCards = document.querySelectorAll('.order-card');
-            
-            orderCards.forEach(card => {
-                const id = card.getAttribute('data-order-id');
-                
-                const orderData = {
-                    orderId: id,
-                    wagons: parseInt(document.getElementById(`wagons-${id}`).value, 10),
-                    transportDate: document.getElementById(`date-${id}`).value,
-                    wagonProfile: document.getElementById(`profile-${id}`).value,
-                    wagonType: document.getElementById(`type-${id}`).value,
-                    timeSlotArrival: document.getElementById(`arrival-${id}`).value,
-                    departureTime: document.getElementById(`departure-${id}`).value,
-                    reasonUnderdelivery: document.getElementById(`reason-${id}`).value,
-                    comment: document.getElementById(`comment-${id}`).value
-                };
-                
-                ordersData.push(orderData);
-            });
-            
-            const finalPayload = {
-                submissionTimestamp: new Date().toISOString(),
-                orders: ordersData
-            };
+        document.getElementById('order-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            
+            const ordersData = [];
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            orderCards.forEach(card => {
+                const id = card.getAttribute('data-order-id');
+                
+                const orderData = {
+                    orderId: id,
+                    wagons: parseInt(document.getElementById(`wagons-${id}`).value, 10),
+                    transportDate: document.getElementById(`date-${id}`).value,
+                    wagonProfile: document.getElementById(`profile-${id}`).value,
+                    wagonType: document.getElementById(`type-${id}`).value,
+                    timeSlotArrival: document.getElementById(`arrival-${id}`).value,
+                    departureTime: document.getElementById(`departure-${id}`).value,
+                    reasonUnderdelivery: document.getElementById(`reason-${id}`).value,
+                    comment: document.getElementById(`comment-${id}`).value
+                };
+                
+                ordersData.push(orderData);
+            });
+            
+            const finalPayload = {
+                submissionTimestamp: new Date().toISOString(),
+                orders: ordersData
+            };
 
-            // UPDATE THIS URL WITH YOUR FLOW 2 HTTP TRIGGER
-            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/ma[...]
+            // UPDATE THIS URL WITH YOUR FLOW 2 HTTP TRIGGER
+            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'
 
-            try {
-                const response = await fetch(logicAppUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(finalPayload)
-                });
+            try {
+                const response = await fetch(logicAppUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalPayload)
+                });
 
-                if (response.ok) {
-                    showAlert('Success! Alle Transportaufträge wurden bestätigt und an die Logistik gesendet.', 'success');
-                    document.getElementById('order-form').querySelector('button[type="submit"]').disabled = true;
-                } else {
-                    const errorText = await response.text();
-                    showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
-                }
-            } catch (error) {
-                showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
-                console.error("Fetch Error:", error);
-            }
-        });
+                if (response.ok) {
+                    showAlert('Success! Alle Transportaufträge wurden bestätigt und an die Logistik gesendet.', 'success');
+                    document.getElementById('order-form').querySelector('button[type="submit"]').disabled = true;
+                } else {
+                    const errorText = await response.text();
+                    showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
+                }
+            } catch (error) {
+                showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                console.error("Fetch Error:", error);
+            }
+        });
 
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alert-container');
-            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
-                                            ${message}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
-        }
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
 
-        document.addEventListener('DOMContentLoaded', loadForm);
-    </script>
+        document.addEventListener('DOMContentLoaded', loadForm);
+    </script>
 </body>
 </html>
