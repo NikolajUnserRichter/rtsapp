@@ -34,6 +34,30 @@
             max-width: 1000px;
         }
 
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 100px auto;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: #00002d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #6b7280;
+        }
+
         .form-control, .form-select {
             background-color: #f0f3f8;
             border: 1px solid #d1d5db;
@@ -80,10 +104,44 @@
             background-color: #1e3a8a;
             color: white;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Login Screen -->
+    <div id="login-screen" class="container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 60px; margin-bottom: 20px;">
+                <h2>Anmeldung erforderlich</h2>
+                <p>Bitte melden Sie sich an, um auf die Transportaufträge zuzugreifen.</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Benutzername</label>
+                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="form-label">Passwort</label>
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                </div>
+                
+                <div id="login-alert" class="mb-3"></div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom">Anmelden</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application (hidden until login) -->
+    <div id="main-app" class="container hidden">
         <div class="main-card">
             <div class="header-section text-center">
                 <h1>Wagon Transport Order Editor <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
@@ -109,7 +167,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // No debug mode!
+        // Authentication credentials (TODO: Move to secure backend authentication)
+        const VALID_CREDENTIALS = {
+            'bmw_logistics': 'Transport2025!',
+            'admin': 'SecurePass123'
+        };
 
         // Configuration (updated)
         const CONFIG = {
@@ -126,6 +188,32 @@
                 { value: '07', text: '07 Ausrangierung Schadwaggons' }
             ]
         };
+
+        // Handle Login
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (VALID_CREDENTIALS[username] && VALID_CREDENTIALS[username] === password) {
+                // Successful login
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                loadForm();
+            } else {
+                // Failed login
+                showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
+            }
+        });
+
+        function showLoginAlert(message, type) {
+            const alertContainer = document.getElementById('login-alert');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
         
         function generateTimeSlots(intervalMinutes) {
             const slots = [];
@@ -291,7 +379,7 @@
             };
 
             // UPDATE THIS URL WITH YOUR FLOW 2 HTTP TRIGGER
-            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'
+            const logicAppUrl = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/ma[...]
 
             try {
                 const response = await fetch(logicAppUrl, {
@@ -320,8 +408,6 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>`;
         }
-
-        document.addEventListener('DOMContentLoaded', loadForm);
     </script>
 </body>
 </html>
