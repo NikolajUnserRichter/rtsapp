@@ -3,26 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form</title>
-    <script>
-        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1';
-        const ORDER_SUBMIT_URL = 'YOUR_ORDER_SUBMISSION_FLOW_URL_HERE';
-
-        async function authenticate() {
-            // Authentication logic here
-        }
-
-        async function submitOrder() {
-            // Order submission logic here
-        }
-
-        // Other functionalities such as session token handling and form validation
-    </script>
+    <title>Wagon Transport Order Application</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Order Form</h1>
-    <form id="orderForm" onsubmit="submitOrder(); return false;">
-        <!-- Form fields here -->
-    </form>
+    <header>
+        <h1>BMW Wagon Transport</h1>
+    </header>
+    <main>
+        <section>
+            <form id="orderForm">
+                <h2>Order Form</h2>
+                <!-- Include form fields as necessary -->
+                <label for="timeSlot">Select Time Slot:</label>
+                <select id="timeSlot" name="timeSlot">
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                </select>
+                <button type="submit">Submit Order</button>
+            </form>
+        </section>
+        <section>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+    </main>
+    <script>
+        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1';
+        const ORDER_SUBMIT_URL = 'keep_this_url'; // Existing ORDER_SUBMIT_URL retained
+        // Additional JavaScript logic for functionality goes here
+    </script>
 </body>
 </html>
