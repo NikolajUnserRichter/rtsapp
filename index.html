@@ -73,25 +73,9 @@
             margin-bottom: 5px;
         }
         
-        .route-section {
-            border: 2px solid #3b82f6;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            padding: 25px;
-            background-color: #f8fafc;
-        }
-
-        .route-section h4 {
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #3b82f6;
-        }
-
         .order-card {
             border: 1px solid #e5e7eb;
-            border-left: 5px solid #10b981;
+            border-left: 5px solid #3b82f6;
             border-radius: 8px;
             margin-bottom: 20px;
             padding: 20px;
@@ -100,24 +84,10 @@
 
         .order-card h5 {
             font-weight: 700;
-            color: #10b981;
+            color: #3b82f6;
             margin-bottom: 15px;
             border-bottom: 2px solid #f0f3f8;
             padding-bottom: 5px;
-        }
-
-        .time-slot-section {
-            background-color: #fff7ed;
-            border: 2px solid #fb923c;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .time-slot-section h6 {
-            color: #ea580c;
-            font-weight: 700;
-            margin-bottom: 15px;
         }
 
         .btn-custom {
@@ -209,8 +179,8 @@
         // ============================================
         // CONFIGURATION
         // ============================================
-        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU'
-        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'
+        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
+        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48';
         
         // Session token storage
         let sessionToken = null;
@@ -274,42 +244,6 @@
                 return [];
             }
         }
-
-        function getRouteKey(order) {
-            const departure = order.departure || order.Departure || 'UNKNOWN';
-            const destination = order.destination || order.Destination || 'UNKNOWN';
-            return `${departure}|||${destination}`;
-        }
-
-        function createTimeSlotSection(routeKey, departure, destination) {
-            const arrivalOptions = arrivalSlots.map(s => 
-                `<option value="${s.value}">${s.text}</option>`
-            ).join('');
-
-            const departureOptions = departureSlots.map(s => 
-                `<option value="${s.value}">${s.text}</option>`
-            ).join('');
-
-            return `
-                <div class="time-slot-section">
-                    <h6>🕐 Zeit-Slots für Route: ${departure} → ${destination}</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="arrival-${routeKey}" class="form-label">Arrival Time Slot (2h)</label>
-                            <select class="form-select" id="arrival-${routeKey}" name="arrival-${routeKey}" required>
-                                ${arrivalOptions}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="departure-${routeKey}" class="form-label">Departure Time (15min)</label>
-                            <select class="form-select" id="departure-${routeKey}" name="departure-${routeKey}" required>
-                                ${departureOptions}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
         
         function createOrderCard(order) {
             const id = order.orderId || 'UNKNOWN';
@@ -326,9 +260,17 @@
                 `<option value="${r.value}">${r.text}</option>`
             ).join('');
 
+            const arrivalOptions = arrivalSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+
+            const departureOptions = departureSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+
             return `
                 <div class="order-card" data-order-id="${id}">
-                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'}</h5>
+                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
                     <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
                     <div class="row g-3">
                         <div class="col-md-3">
@@ -351,6 +293,18 @@
                                 ${typeOptions}
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label for="arrival-${id}" class="form-label">Arrival Time Slot (2h)</label>
+                            <select class="form-select" id="arrival-${id}" name="arrival-${id}" required>
+                                ${arrivalOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="departure-${id}" class="form-label">Departure Time (15min)</label>
+                            <select class="form-select" id="departure-${id}" name="departure-${id}" required>
+                                ${departureOptions}
+                            </select>
+                        </div>
                         <div class="col-md-6">
                             <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
                             <select class="form-select" id="reason-${id}" name="reason-${id}" required>
@@ -370,7 +324,6 @@
             const ordersData = getOrdersFromUrl();
             const container = document.getElementById('orders-container');
             container.innerHTML = '';
-            
             if (ordersData.length === 0) {
                 container.innerHTML = `
                     <div class="alert alert-danger" role="alert">
@@ -382,37 +335,8 @@
                 if (submitBtn) submitBtn.disabled = true;
                 return;
             }
-
-            // Group orders by route (Departure -> Destination)
-            const routeGroups = {};
             ordersData.forEach(order => {
-                const routeKey = getRouteKey(order);
-                if (!routeGroups[routeKey]) {
-                    routeGroups[routeKey] = {
-                        departure: order.departure || order.Departure || 'UNKNOWN',
-                        destination: order.destination || order.Destination || 'UNKNOWN',
-                        orders: []
-                    };
-                }
-                routeGroups[routeKey].orders.push(order);
-            });
-
-            // Create a section for each route
-            Object.keys(routeGroups).forEach(routeKey => {
-                const group = routeGroups[routeKey];
-                
-                const routeSection = document.createElement('div');
-                routeSection.className = 'route-section';
-                
-                routeSection.innerHTML = `
-                    <h4>📍 Route: ${group.departure} → ${group.destination}</h4>
-                    ${createTimeSlotSection(routeKey, group.departure, group.destination)}
-                    <div class="orders-list mt-3">
-                        ${group.orders.map(order => createOrderCard(order)).join('')}
-                    </div>
-                `;
-                
-                container.appendChild(routeSection);
+                container.innerHTML += createOrderCard(order);
             });
         }
 
@@ -494,38 +418,8 @@
                 const ordersData = [];
                 const orderCards = document.querySelectorAll('.order-card');
                 
-                // Get all time slots by route
-                const timeSlotsByRoute = {};
-                document.querySelectorAll('.time-slot-section').forEach(section => {
-                    const arrivalSelect = section.querySelector('select[id^="arrival-"]');
-                    const departureSelect = section.querySelector('select[id^="departure-"]');
-                    
-                    if (arrivalSelect && departureSelect) {
-                        const routeKey = arrivalSelect.id.replace('arrival-', '');
-                        timeSlotsByRoute[routeKey] = {
-                            arrival: arrivalSelect.value,
-                            departure: departureSelect.value
-                        };
-                    }
-                });
-                
                 orderCards.forEach(card => {
                     const id = card.getAttribute('data-order-id');
-                    
-                    // Find the route key for this order
-                    const routeSection = card.closest('.route-section');
-                    const routeHeading = routeSection ? routeSection.querySelector('h4').textContent : '';
-                    
-                    // Extract departure and destination from heading
-                    const routeMatch = routeHeading.match(/📍 Route: (.+) → (.+)/);
-                    let routeKey = '';
-                    if (routeMatch) {
-                        const departure = routeMatch[1].trim();
-                        const destination = routeMatch[2].trim();
-                        routeKey = `${departure}|||${destination}`;
-                    }
-                    
-                    const timeSlots = timeSlotsByRoute[routeKey] || { arrival: '', departure: '' };
                     
                     const orderData = {
                         orderId: id,
@@ -533,8 +427,8 @@
                         transportDate: document.getElementById(`date-${id}`).value,
                         wagonProfile: document.getElementById(`profile-${id}`).value,
                         wagonType: document.getElementById(`type-${id}`).value,
-                        timeSlotArrival: timeSlots.arrival,
-                        departureTime: timeSlots.departure,
+                        timeSlotArrival: document.getElementById(`arrival-${id}`).value,
+                        departureTime: document.getElementById(`departure-${id}`).value,
                         reasonUnderdelivery: document.getElementById(`reason-${id}`).value,
                         comment: document.getElementById(`comment-${id}`).value
                     };
