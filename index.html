@@ -115,6 +115,15 @@
             margin-right: 0.5rem;
         }
 
+        .location-display {
+            background-color: #e0f2fe;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-weight: 600;
+            color: #0c4a6e;
+        }
+
         .section-header {
             font-weight: 600;
             font-size: 0.95rem;
@@ -276,7 +285,7 @@
             ).join('');
 
             return `
-                <div class="order-card" data-order-id="${id}">
+                <div class="order-card" data-order-id="${id}" data-departure="${order.departure || ''}" data-destination="${order.destination || ''}">
                     <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
                     <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
                     <div class="row g-3">
@@ -305,48 +314,46 @@
                         <div class="col-12 mt-3">
                             <h6 class="text-primary border-bottom pb-2">📍 Departure Location</h6>
                         </div>
-                        <div class="col-md-3">
-                            <label for="departure-location-${id}" class="form-label">Departure (Location)</label>
-                            <input type="text" class="form-control" id="departure-location-${id}" name="departure-location-${id}" value="${order.departure || ''}" placeholder="z.B. München Werk" required>
+                        <div class="col-md-4">
+                            <label class="form-label">Departure (Location)</label>
+                            <div class="location-display">
+                                ${order.departure || 'z.B. München Werk'}
+                            </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="departure-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
                             <select class="form-select" id="departure-arrival-slot-${id}" name="departure-arrival-slot-${id}" required>
                                 ${arrivalOptions}
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="departure-time-${id}" class="form-label">Departure Time (15min)</label>
                             <select class="form-select" id="departure-time-${id}" name="departure-time-${id}" required>
                                 ${departureOptions}
                             </select>
-                        </div>
-                        <div class="col-md-3">
-                            <!-- Spacer for layout -->
                         </div>
                         
                         <!-- DESTINATION LOCATION SECTION -->
                         <div class="col-12 mt-3">
                             <h6 class="text-success border-bottom pb-2">🎯 Destination Location</h6>
                         </div>
-                        <div class="col-md-3">
-                            <label for="destination-location-${id}" class="form-label">Destination (Location)</label>
-                            <input type="text" class="form-control" id="destination-location-${id}" name="destination-location-${id}" value="${order.destination || ''}" placeholder="z.B. Berlin Depot" required>
+                        <div class="col-md-4">
+                            <label class="form-label">Destination (Location)</label>
+                            <div class="location-display">
+                                ${order.destination || 'z.B. Berlin Depot'}
+                            </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="destination-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
                             <select class="form-select" id="destination-arrival-slot-${id}" name="destination-arrival-slot-${id}" required>
                                 ${arrivalOptions}
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="destination-departure-time-${id}" class="form-label">Departure Time (15min)</label>
                             <select class="form-select" id="destination-departure-time-${id}" name="destination-departure-time-${id}" required>
                                 ${departureOptions}
                             </select>
-                        </div>
-                        <div class="col-md-3">
-                            <!-- Spacer for layout -->
                         </div>
                         
                         <div class="col-md-6 mt-3">
@@ -464,6 +471,8 @@
                 
                 orderCards.forEach(card => {
                     const id = card.getAttribute('data-order-id');
+                    const departure = card.getAttribute('data-departure');
+                    const destination = card.getAttribute('data-destination');
                     
                     const orderData = {
                         orderId: id,
@@ -473,12 +482,12 @@
                         wagonType: document.getElementById(`type-${id}`).value,
                         
                         // Departure Location Data
-                        departure: document.getElementById(`departure-location-${id}`).value,
+                        departure: departure,
                         departureArrivalSlot: document.getElementById(`departure-arrival-slot-${id}`).value,
                         departureTime: document.getElementById(`departure-time-${id}`).value,
                         
                         // Destination Location Data
-                        destination: document.getElementById(`destination-location-${id}`).value,
+                        destination: destination,
                         destinationArrivalSlot: document.getElementById(`destination-arrival-slot-${id}`).value,
                         destinationDepartureTime: document.getElementById(`destination-departure-time-${id}`).value,
                         
