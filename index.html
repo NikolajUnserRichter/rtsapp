@@ -186,8 +186,8 @@
         // ============================================
         // CONFIGURATION
         // ============================================
-        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
-        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48';
+        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU'
+        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'
         
         // Session token storage
         let sessionToken = null;
@@ -267,7 +267,20 @@
                 if (!encodedData) {
                     return [];
                 }
-                const jsonString = decodeURIComponent(encodedData);
+                
+                let jsonString;
+                
+                // Try to decode as base64 first
+                try {
+                    // Decode base64
+                    jsonString = atob(encodedData);
+                    console.log('Data decoded from base64');
+                } catch (base64Error) {
+                    // If base64 decoding fails, try URL decoding (backward compatibility)
+                    console.log('Base64 decoding failed, trying URL decode for backward compatibility');
+                    jsonString = decodeURIComponent(encodedData);
+                }
+                
                 const parsedData = JSON.parse(jsonString);
                 return Array.isArray(parsedData) ? parsedData : [parsedData];
             } catch (e) {
