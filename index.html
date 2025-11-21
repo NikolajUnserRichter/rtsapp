@@ -1,1206 +1,468 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P3 AI Risk Assessment Tool</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Wagon Transport Order Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #c8e665 0%, #a8d64d 100%);
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            background-color: #f4f7fa;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
+        .header-section {
+            background-color: #00002d;
+            color: white;
+            padding: 40px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .header-section h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        .main-card {
+            background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin: 40px auto;
+            max-width: 1000px;
         }
 
-        .language-toggle {
-            text-align: right;
-            padding: 15px 30px;
-            background: white;
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 100px auto;
+            max-width: 450px;
+            padding: 40px;
         }
 
-        .language-toggle button {
-            padding: 8px 16px;
-            border: 2px solid #8bc34a;
-            background: white;
-            color: #8bc34a;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .language-toggle button:hover {
-            background: #8bc34a;
-            color: white;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #a8d64d 0%, #8bc34a 100%);
-            color: white;
-            padding: 30px;
+        .login-header {
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            font-weight: 600;
+        .login-header h2 {
+            color: #00002d;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        .header p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 14px;
+        .login-header p {
+            color: #6b7280;
         }
 
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
+        .form-control, .form-select {
+            background-color: #f0f3f8;
+            border: 1px solid #d1d5db;
+            color: #1f2937;
             font-weight: 500;
-            color: #555;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab:hover {
-            background: #e8e9ea;
-        }
-
-        .tab.active {
-            color: #8bc34a;
-            border-bottom-color: #8bc34a;
-            background: white;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .form-grid {
-            display: grid;
-            gap: 25px;
-        }
-
-        .form-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #8bc34a;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #558b2f;
-            margin: 0 0 20px 0;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
+            font-size: 1rem;
+            height: 44px;
         }
 
         .form-label {
-            display: block;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 14px;
-            background: white;
-            transition: border-color 0.3s;
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: #8bc34a;
+            font-weight: 600;
+            color: #00002d;
+            margin-bottom: 5px;
         }
         
-        select[multiple] {
-            height: auto;
-            min-height: 100px;
-        }
-
-        /* Time slot specific styles */
-        .time-slot-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .time-input-wrapper {
-            position: relative;
-        }
-
-        .time-input-wrapper label {
-            display: block;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        input[type="time"] {
-            padding: 10px;
-            font-size: 13px;
-        }
-
-        .time-display {
-            background: #e3f2fd;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 13px;
-            color: #0d47a1;
-        }
-
-        .result-card {
-            background: white;
-            padding: 25px;
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #3b82f6;
             border-radius: 8px;
             margin-bottom: 20px;
-            border: 2px solid #e0e0e0;
+            padding: 20px;
+            background-color: #ffffff;
         }
 
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .order-card h5 {
+            font-weight: 700;
+            color: #3b82f6;
             margin-bottom: 15px;
+            border-bottom: 2px solid #f0f3f8;
+            padding-bottom: 5px;
         }
 
-        .result-title {
-            font-size: 16px;
+        .btn-custom {
+            background-color: #3b82f6;
+            color: white;
             font-weight: 600;
-            color: #558b2f;
-        }
-
-        .risk-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .risk-critical { background: #fee; color: #c00; }
-        .risk-high { background: #ffeaa7; color: #d63031; }
-        .risk-medium { background: #fff3cd; color: #856404; }
-        .risk-low { background: #d4edda; color: #155724; }
-        .risk-minimal { background: #e3f2fd; color: #0d47a1; }
-
-        .measure-item {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #8bc34a;
-            border-radius: 4px;
-        }
-
-        .measure-title {
-            font-weight: 600;
-            color: #558b2f;
-            margin-bottom: 5px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            padding: 30px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .btn {
-            padding: 12px 24px;
+            font-size: 1.1rem;
+            padding: 10px 30px;
             border: none;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
+            transition: background-color 0.3s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #a8d64d 0%, #8bc34a 100%);
+        .btn-custom:hover {
+            background-color: #1e3a8a;
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 195, 74, 0.4);
+        .hidden {
+            display: none !important;
         }
 
-        .btn-secondary {
-            background: white;
-            color: #8bc34a;
-            border: 2px solid #8bc34a;
-        }
-
-        .btn-secondary:hover {
-            background: #8bc34a;
-            color: white;
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #0d47a1;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
 <body>
-<div style="text-align: center; padding: 20px 20px 10px 20px;">
-    <img src="P3_lemonsplash.png" alt="P3 Logo" style="height: 80px; width: auto;">
-</div>
-    <div class="container">
-        <div class="language-toggle">
-            <button onclick="toggleLanguage()" id="languageBtn">🇩🇪 Deutsch</button>
-        </div>
-        
-        <div class="header">
-            <h1 id="headerTitle">P3 AI Risk Assessment Tool</h1>
-            <p id="headerSubtitle">Strategic Assessment of AI Systems for Consulting Projects</p>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('assessment')" data-tab="assessment">Assessment</div>
-            <div class="tab" onclick="showTab('results')" data-tab="results">Risk Analysis</div>
-            <div class="tab" onclick="showTab('measures')" data-tab="measures">Recommendations</div>
-        </div>
-
-        <div id="assessment" class="tab-content active">
-            <div class="content">
-                <div class="form-grid">
-                    <div class="form-section">
-                        <h3 class="section-title" data-i18n="section.context">Project & AI System Context</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.projectType">Project Type / Area:</label>
-                            <select id="projectType" onchange="calculateRisk()">
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="strategy" data-i18n="option.strategy">Strategy Consulting & Business Development</option>
-                                <option value="digital_transformation" data-i18n="option.digitalTransformation">Digital Transformation</option>
-                                <option value="process_optimization" data-i18n="option.processOptimization">Process Optimization & Change Management</option>
-                                <option value="software_development" data-i18n="option.softwareDevelopment">Software Development & Implementation</option>
-                                <option value="data_analytics" data-i18n="option.dataAnalytics">Data Analytics & AI Solutions</option>
-                                <option value="automotive" data-i18n="option.automotive">Automotive Engineering & Mobility</option>
-                                <option value="internal_operations" data-i18n="option.internalOperations">Internal P3 Operations</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.aiTool">AI Tool / System:</label>
-                            <select id="aiTool" onchange="calculateRisk()">
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="m365_copilot" data-i18n="option.m365Copilot">✅ M365 Copilot (approved)</option>
-                                <option value="ai_builder" data-i18n="option.aiBuilder">✅ AI Builder in Power Platform (approved)</option>
-                                <option value="other" data-i18n="option.otherAI">⚠️ Other AI System (approval required)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.aiUseCase">AI Use Case:</label>
-                            <select id="aiUseCase" onchange="calculateRisk()" multiple>
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="client_advisory" data-i18n="option.clientAdvisory">Client Advisory & Insight Generation</option>
-                                <option value="predictive_analytics" data-i18n="option.predictiveAnalytics">Predictive Analytics & Forecasting</option>
-                                <option value="automation" data-i18n="option.automation">Process Automation</option>
-                                <option value="decision_support" data-i18n="option.decisionSupport">Decision Support System</option>
-                                <option value="nlp_analysis" data-i18n="option.nlpAnalysis">NLP & Document Analysis</option>
-                                <option value="code_generation" data-i18n="option.codeGeneration">Code Generation & Testing</option>
-                                <option value="resource_allocation" data-i18n="option.resourceAllocation">Resource & Project Allocation</option>
-                                <option value="risk_assessment" data-i18n="option.riskAssessment">Risk Assessment & Compliance</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.dataType">Processed Data Types:</label>
-                            <select id="dataType" onchange="calculateRisk()" multiple>
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="public_only" data-i18n="option.publicOnly">Public data only</option>
-                                <option value="company_general" data-i18n="option.companyGeneral">General company data (anonymized)</option>
-                                <option value="client_confidential" data-i18n="option.clientConfidential">Confidential client data</option>
-                                <option value="strategic_sensitive" data-i18n="option.strategicSensitive">Strategically sensitive information</option>
-                                <option value="personal_data" data-i18n="option.personalData">Personal data (employees/clients)</option>
-                                <option value="special_categories" data-i18n="option.specialCategories">Special categories of personal data</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3 class="section-title" data-i18n="section.properties">AI System Properties</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.autonomy">Level of Autonomy:</label>
-                            <select id="autonomy" onchange="calculateRisk()">
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="support_only" data-i18n="option.supportOnly">Support: AI generates suggestions/insights</option>
-                                <option value="interactive" data-i18n="option.interactive">Interactive: AI communicates with stakeholders</option>
-                                <option value="semi_automated" data-i18n="option.semiAutomated">Semi-automated: AI makes preliminary decisions</option>
-                                <option value="automated" data-i18n="option.automated">Automated: AI makes final decisions</option>
-                                <option value="critical_automated" data-i18n="option.criticalAutomated">Critical: AI makes high-impact decisions</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.impact">Impact Scope:</label>
-                            <select id="impact" onchange="calculateRisk()">
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="internal_efficiency" data-i18n="option.internalEfficiency">Internal efficiency (low impact)</option>
-                                <option value="project_support" data-i18n="option.projectSupport">Project support (medium impact)</option>
-                                <option value="client_deliverable" data-i18n="option.clientDeliverable">Client deliverable (high impact)</option>
-                                <option value="strategic_decision" data-i18n="option.strategicDecision">Strategic decision basis</option>
-                                <option value="critical_operations" data-i18n="option.criticalOperations">Critical business processes</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.transparency">AI System Transparency:</label>
-                            <select id="transparency" onchange="calculateRisk()">
-                                <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="high" data-i18n="option.transparencyHigh">High: Decisions fully traceable</option>
-                                <option value="medium" data-i18n="option.transparencyMedium">Medium: Key factors explainable</option>
-                                <option value="low" data-i18n="option.transparencyLow">Low: Black-box system</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- NEW: Time Slot Section -->
-                    <div class="form-section">
-                        <h3 class="section-title" data-i18n="section.timeSlots">Time Slots (WERK MUCMI → Cuxhaven)</h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.arrivalSlot">Arrival Time Slot (2h window):</label>
-                            <div class="time-slot-group">
-                                <div class="time-input-wrapper">
-                                    <label data-i18n="label.arrivalStart">Start Time</label>
-                                    <input type="time" id="arrivalStart" onchange="updateTimeSlots()">
-                                </div>
-                                <div class="time-input-wrapper">
-                                    <label data-i18n="label.arrivalEnd">End Time</label>
-                                    <input type="time" id="arrivalEnd" readonly>
-                                </div>
-                            </div>
-                            <div class="time-display" id="arrivalSlotDisplay" style="display: none;">
-                                <strong data-i18n="label.arrivalWindow">Arrival Window:</strong> <span id="arrivalWindowText"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="label.departureTime">Departure Time (15min slot):</label>
-                            <div class="time-slot-group">
-                                <div class="time-input-wrapper">
-                                    <label data-i18n="label.departureStart">Departure Time</label>
-                                    <input type="time" id="departureStart" onchange="updateTimeSlots()">
-                                </div>
-                                <div class="time-input-wrapper">
-                                    <label data-i18n="label.departureEnd">End of Slot</label>
-                                    <input type="time" id="departureEnd" readonly>
-                                </div>
-                            </div>
-                            <div class="time-display" id="departureSlotDisplay" style="display: none;">
-                                <strong data-i18n="label.departureWindow">Departure Slot:</strong> <span id="departureWindowText"></span>
-                            </div>
-                        </div>
-
-                        <div class="info-box">
-                            <strong data-i18n="info.routeInfo">Route:</strong> WERK MUCMI → Cuxhaven<br>
-                            <span data-i18n="info.timeSlotNote">Arrival slot: 2-hour window | Departure slot: 15-minute window</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-box" id="infoBox1">
-                    <strong>⚠️ P3 AI Policy:</strong> Currently, only the following AI tools are approved for use:
-                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-                        <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
-                        <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
-                    </ul>
-                    Other AI systems require approval from P3 Management.
+    <!-- Login Screen -->
+    <div id="login-screen" class="container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 60px; margin-bottom: 20px;">
+                <h2>Anmeldung erforderlich</h2>
+                <p>Bitte melden Sie sich an, um auf die Transportaufträge zuzugreifen.</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Benutzername</label>
+                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
                 </div>
                 
-                <div class="info-box" style="margin-top: 15px;" id="infoBox2">
-                    <strong data-i18n="info.note">Note:</strong> <span data-i18n="info.disclaimer">This tool provides an initial risk assessment of AI systems in the context of P3 consulting projects, considering the EU AI Act and GDPR.</span>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Passwort</label>
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
                 </div>
-            </div>
-        </div>
-
-        <div id="results" class="tab-content">
-            <div class="content">
-                <div id="resultsContent">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📊</div>
-                        <p data-i18n="empty.results">Please complete the assessment first.</p>
-                    </div>
+                
+                <div id="login-alert" class="mb-3"></div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom" id="login-btn">
+                        <span id="login-btn-text">Anmelden</span>
+                        <span id="login-spinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+                    </button>
                 </div>
-            </div>
-        </div>
-
-        <div id="measures" class="tab-content">
-            <div class="content">
-                <div id="measuresContent">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">✅</div>
-                        <p data-i18n="empty.measures">Please complete the assessment first.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="btn btn-primary" onclick="downloadPDF()"><span data-i18n="btn.export">📄 Export Assessment (CSV)</span></button>
-            <button class="btn btn-secondary" onclick="resetForm()"><span data-i18n="btn.reset">🔄 New Assessment</span></button>
+            </form>
         </div>
     </div>
 
-    <script>
-        let currentAssessment = null;
-        let currentLanguage = 'en'; // Default language
+    <!-- Main Application (hidden until login) -->
+    <div id="main-app" class="container hidden">
+        <div class="main-card">
+            <div class="header-section text-center">
+                <h1>Wagon Transport Order Editor <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
+                <p class="lead" style="color: #dbeafe;">Bitte überprüfen und bestätigen Sie die Liefer-/Abhol-Slots.</p>
+            </div>
 
-        const translations = {
-            en: {
-                headerTitle: 'P3 AI Risk Assessment Tool',
-                headerSubtitle: 'Strategic Assessment of AI Systems for Consulting Projects',
-                'tab.assessment': 'Assessment',
-                'tab.results': 'Risk Analysis',
-                'tab.measures': 'Recommendations',
-                'section.context': 'Project & AI System Context',
-                'section.properties': 'AI System Properties',
-                'section.timeSlots': 'Time Slots (WERK MUCMI → Cuxhaven)',
-                'label.projectType': 'Project Type / Area:',
-                'label.aiTool': 'AI Tool / System:',
-                'label.aiUseCase': 'AI Use Case:',
-                'label.dataType': 'Processed Data Types:',
-                'label.autonomy': 'Level of Autonomy:',
-                'label.impact': 'Impact Scope:',
-                'label.transparency': 'AI System Transparency:',
-                'label.arrivalSlot': 'Arrival Time Slot (2h window):',
-                'label.arrivalStart': 'Start Time',
-                'label.arrivalEnd': 'End Time',
-                'label.arrivalWindow': 'Arrival Window:',
-                'label.departureTime': 'Departure Time (15min slot):',
-                'label.departureStart': 'Departure Time',
-                'label.departureEnd': 'End of Slot',
-                'label.departureWindow': 'Departure Slot:',
-                'option.pleaseSelect': 'Please select...',
-                'option.strategy': 'Strategy Consulting & Business Development',
-                'option.digitalTransformation': 'Digital Transformation',
-                'option.processOptimization': 'Process Optimization & Change Management',
-                'option.softwareDevelopment': 'Software Development & Implementation',
-                'option.dataAnalytics': 'Data Analytics & AI Solutions',
-                'option.automotive': 'Automotive Engineering & Mobility',
-                'option.internalOperations': 'Internal P3 Operations',
-                'option.m365Copilot': '✅ M365 Copilot (approved)',
-                'option.aiBuilder': '✅ AI Builder in Power Platform (approved)',
-                'option.otherAI': '⚠️ Other AI System (approval required)',
-                'option.clientAdvisory': 'Client Advisory & Insight Generation',
-                'option.predictive_analytics': 'Predictive Analytics & Forecasting',
-                'option.automation': 'Process Automation',
-                'option.decisionSupport': 'Decision Support System',
-                'option.nlpAnalysis': 'NLP & Document Analysis',
-                'option.codeGeneration': 'Code Generation & Testing',
-                'option.resourceAllocation': 'Resource & Project Allocation',
-                'option.riskAssessment': 'Risk Assessment & Compliance',
-                'option.publicOnly': 'Public data only',
-                'option.companyGeneral': 'General company data (anonymized)',
-                'option.clientConfidential': 'Confidential client data',
-                'option.strategicSensitive': 'Strategically sensitive information',
-                'option.personalData': 'Personal data (employees/clients)',
-                'option.specialCategories': 'Special categories of personal data',
-                'option.supportOnly': 'Support: AI generates suggestions/insights',
-                'option.interactive': 'Interactive: AI communicates with stakeholders',
-                'option.semiAutomated': 'Semi-automated: AI makes preliminary decisions',
-                'option.automated': 'Automated: AI makes final decisions',
-                'option.criticalAutomated': 'Critical: AI makes high-impact decisions',
-                'option.internalEfficiency': 'Internal efficiency (low impact)',
-                'option.projectSupport': 'Project support (medium impact)',
-                'option.clientDeliverable': 'Client deliverable (high impact)',
-                'option.strategicDecision': 'Strategic decision basis',
-                'option.criticalOperations': 'Critical business processes',
-                'option.transparencyHigh': 'High: Decisions fully traceable',
-                'option.transparencyMedium': 'Medium: Key factors explainable',
-                'option.transparencyLow': 'Low: Black-box system',
-                'info.note': 'Note:',
-                'info.disclaimer': 'This tool provides an initial risk assessment of AI systems in the context of P3 consulting projects, considering the EU AI Act and GDPR.',
-                'info.routeInfo': 'Route:',
-                'info.timeSlotNote': 'Arrival slot: 2-hour window | Departure slot: 15-minute window',
-                'empty.results': 'Please complete the assessment first.',
-                'empty.measures': 'Please complete the assessment first.',
-                'btn.export': '📄 Export Assessment (CSV)',
-                'btn.reset': '🔄 New Assessment',
-                'result.riskAssessment': 'Risk Assessment',
-                'result.riskScore': 'Risk Score',
-                'result.projectType': 'Project Type',
-                'result.recommendedMeasures': 'Recommended Measures',
-                'result.assessmentDetails': 'Assessment Details',
-                'result.aiTool': 'AI Tool',
-                'result.aiUseCase': 'AI Use Case',
-                'result.dataType': 'Data Type',
-                'result.autonomy': 'Autonomy Level',
-                'result.impact': 'Impact',
-                'result.transparency': 'Transparency',
-                'result.arrivalSlot': 'Arrival Slot',
-                'result.departureSlot': 'Departure Slot',
-                'measures.title': 'Recommended Measures',
-                'risk.minimal': 'Minimal Risk',
-                'risk.low': 'Low Risk',
-                'risk.medium': 'Medium Risk',
-                'risk.high': 'High Risk',
-                'risk.critical': 'Critical Risk',
-                languageBtn: '🇩🇪 Deutsch'
-            },
-            de: {
-                headerTitle: 'P3 AI Risk Assessment Tool',
-                headerSubtitle: 'Strategische Bewertung von KI-Systemen für Consulting-Projekte',
-                'tab.assessment': 'Assessment',
-                'tab.results': 'Risiko-Analyse',
-                'tab.measures': 'Empfehlungen',
-                'section.context': 'Projekt & KI-System Kontext',
-                'section.properties': 'KI-System Eigenschaften',
-                'section.timeSlots': 'Zeitfenster (WERK MUCMI → Cuxhaven)',
-                'label.projectType': 'Projekttyp / Bereich:',
-                'label.aiTool': 'KI-Tool / System:',
-                'label.aiUseCase': 'KI-Anwendungsfall:',
-                'label.dataType': 'Verarbeitete Datentypen:',
-                'label.autonomy': 'Autonomiegrad:',
-                'label.impact': 'Auswirkungsbereich:',
-                'label.transparency': 'KI-System Transparenz:',
-                'label.arrivalSlot': 'Ankunftszeitfenster (2h Fenster):',
-                'label.arrivalStart': 'Startzeit',
-                'label.arrivalEnd': 'Endzeit',
-                'label.arrivalWindow': 'Ankunftsfenster:',
-                'label.departureTime': 'Abfahrtszeit (15min Slot):',
-                'label.departureStart': 'Abfahrtszeit',
-                'label.departureEnd': 'Ende des Slots',
-                'label.departureWindow': 'Abfahrts-Slot:',
-                'option.pleaseSelect': 'Bitte wählen...',
-                'option.strategy': 'Strategieberatung & Business Development',
-                'option.digitalTransformation': 'Digitale Transformation',
-                'option.processOptimization': 'Prozessoptimierung & Change Management',
-                'option.softwareDevelopment': 'Softwareentwicklung & Implementation',
-                'option.dataAnalytics': 'Data Analytics & AI Solutions',
-                'option.automotive': 'Automotive Engineering & Mobility',
-                'option.internalOperations': 'Interne P3-Operationen',
-                'option.m365Copilot': '✅ M365 Copilot (freigegeben)',
-                'option.aiBuilder': '✅ AI Builder in Power Platform (freigegeben)',
-                'option.otherAI': '⚠️ Anderes KI-System (Genehmigung erforderlich)',
-                'option.clientAdvisory': 'Client Advisory & Insight Generation',
-                'option.predictive_analytics': 'Predictive Analytics & Forecasting',
-                'option.automation': 'Prozessautomatisierung',
-                'option.decisionSupport': 'Decision Support System',
-                'option.nlpAnalysis': 'NLP & Document Analysis',
-                'option.codeGeneration': 'Code Generation & Testing',
-                'option.resourceAllocation': 'Resource & Project Allocation',
-                'option.riskAssessment': 'Risk Assessment & Compliance',
-                'option.publicOnly': 'Ausschließlich öffentliche Daten',
-                'option.companyGeneral': 'Allgemeine Unternehmensdaten (anonymisiert)',
-                'option.clientConfidential': 'Vertrauliche Kundendaten',
-                'option.strategicSensitive': 'Strategisch sensible Informationen',
-                'option.personalData': 'Personenbezogene Daten (Mitarbeiter/Kunden)',
-                'option.specialCategories': 'Besondere Kategorien personenbezogener Daten',
-                'option.supportOnly': 'Unterstützung: KI generiert Vorschläge/Insights',
-                'option.interactive': 'Interaktiv: KI kommuniziert mit Stakeholdern',
-                'option.semiAutomated': 'Semi-automatisiert: KI trifft Vorentscheidungen',
-                'option.automated': 'Automatisiert: KI trifft finale Entscheidungen',
-                'option.criticalAutomated': 'Kritisch: KI trifft Entscheidungen mit hoher Tragweite',
-                'option.internalEfficiency': 'Interne Effizienz (low impact)',
-                'option.projectSupport': 'Projektunterstützung (medium impact)',
-                'option.clientDeliverable': 'Client Deliverable (high impact)',
-                'option.strategicDecision': 'Strategische Entscheidungsgrundlage',
-                'option.criticalOperations': 'Kritische Geschäftsprozesse',
-                'option.transparencyHigh': 'Hoch: Entscheidungen vollständig nachvollziehbar',
-                'option.transparencyMedium': 'Mittel: Wesentliche Faktoren erklärbar',
-                'option.transparencyLow': 'Gering: Black-Box System',
-                'info.note': 'Hinweis:',
-                'info.disclaimer': 'Dieses Tool bietet eine erste Einschätzung zur Risikobewertung von KI-Systemen im Kontext der P3-Beratungsprojekte unter Berücksichtigung des EU AI Acts und DSGVO.',
-                'info.routeInfo': 'Route:',
-                'info.timeSlotNote': 'Ankunfts-Slot: 2-Stunden-Fenster | Abfahrts-Slot: 15-Minuten-Fenster',
-                'empty.results': 'Bitte führen Sie zunächst das Assessment durch.',
-                'empty.measures': 'Bitte führen Sie zunächst das Assessment durch.',
-                'btn.export': '📄 Assessment exportieren (CSV)',
-                'btn.reset': '🔄 Neues Assessment',
-                'result.riskAssessment': 'Risiko-Bewertung',
-                'result.riskScore': 'Risk Score',
-                'result.projectType': 'Projekttyp',
-                'result.recommendedMeasures': 'Empfohlene Maßnahmen',
-                'result.assessmentDetails': 'Assessment Details',
-                'result.aiTool': 'KI-Tool',
-                'result.aiUseCase': 'KI-Anwendungsfall',
-                'result.dataType': 'Datentyp',
-                'result.autonomy': 'Autonomiegrad',
-                'result.impact': 'Impact',
-                'result.transparency': 'Transparenz',
-                'result.arrivalSlot': 'Ankunfts-Slot',
-                'result.departureSlot': 'Abfahrts-Slot',
-                'measures.title': 'Empfohlene Maßnahmen',
-                'risk.minimal': 'Minimales Risiko',
-                'risk.low': 'Geringes Risiko',
-                'risk.medium': 'Mittleres Risiko',
-                'risk.high': 'Hohes Risiko',
-                'risk.critical': 'Kritisches Risiko',
-                languageBtn: '🇬🇧 English'
-            }
+            <div class="p-4">
+                <form id="order-form">
+                    <div id="orders-container">
+                        <div class="alert alert-info" role="alert">Lade Bestelldaten...</div>
+                    </div>
+
+                    <div id="alert-container" class="mt-4"></div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-custom mt-3">Aufträge bestätigen & an Logistik senden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
+        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48';
+        
+        // Session token storage
+        let sessionToken = null;
+
+        // Configuration
+        const CONFIG = {
+            profiles: ['G1', 'G2'],
+            wagonTypes: ['Offen', 'Geschlossen', 'Offen + Geschlossen'],
+            reasons: [
+                { value: 'None', text: '— Keine Unterlieferung —' },
+                { value: '01', text: '01 Fehlende Fahrzeuge (z.B. geringe Produktion,...)' },
+                { value: '02', text: '02 BMW AQ-Sperre' },
+                { value: '03', text: '03 Störungen in der Montage' },
+                { value: '04', text: '04 Technische Störungen BMW' },
+                { value: '05', text: '05 Falsche Waggongattung angeliefert' },
+                { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
+                { value: '07', text: '07 Ausrangierung Schadwaggons' }
+            ]
         };
 
-        // NEW: Time slot calculation function
-        function updateTimeSlots() {
-            const arrivalStart = document.getElementById('arrivalStart').value;
-            const departureStart = document.getElementById('departureStart').value;
-            
-            // Calculate arrival slot (2 hours)
-            if (arrivalStart) {
-                const [hours, minutes] = arrivalStart.split(':');
-                const startDate = new Date();
-                startDate.setHours(parseInt(hours), parseInt(minutes), 0);
-                
-                const endDate = new Date(startDate);
-                endDate.setHours(endDate.getHours() + 2);
-                
-                const endHours = String(endDate.getHours()).padStart(2, '0');
-                const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
-                
-                document.getElementById('arrivalEnd').value = `${endHours}:${endMinutes}`;
-                document.getElementById('arrivalSlotDisplay').style.display = 'block';
-                document.getElementById('arrivalWindowText').textContent = `${arrivalStart} - ${endHours}:${endMinutes}`;
-            }
-            
-            // Calculate departure slot (15 minutes)
-            if (departureStart) {
-                const [hours, minutes] = departureStart.split(':');
-                const startDate = new Date();
-                startDate.setHours(parseInt(hours), parseInt(minutes), 0);
-                
-                const endDate = new Date(startDate);
-                endDate.setMinutes(endDate.getMinutes() + 15);
-                
-                const endHours = String(endDate.getHours()).padStart(2, '0');
-                const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
-                
-                document.getElementById('departureEnd').value = `${endHours}:${endMinutes}`;
-                document.getElementById('departureSlotDisplay').style.display = 'block';
-                document.getElementById('departureWindowText').textContent = `${departureStart} - ${endHours}:${endMinutes}`;
-            }
-            
-            // Recalculate risk if assessment exists
-            if (currentAssessment) {
-                calculateRisk();
-            }
+        function showLoginAlert(message, type) {
+            const alertContainer = document.getElementById('login-alert');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
         }
-
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'en' ? 'de' : 'en';
-            localStorage.setItem('language', currentLanguage);
-            updateLanguage();
-            
-            // Re-render results if assessment exists
-            if (currentAssessment) {
-                updateResults(currentAssessment);
-            }
-        }
-
-        function updateLanguage() {
-            const lang = translations[currentLanguage];
-            
-            // Update header
-            document.getElementById('headerTitle').textContent = lang.headerTitle;
-            document.getElementById('headerSubtitle').textContent = lang.headerSubtitle;
-            
-            // Update language button
-            document.getElementById('languageBtn').textContent = lang.languageBtn;
-            
-            // Update tabs
-            document.querySelector('[data-tab="assessment"]').textContent = lang['tab.assessment'];
-            document.querySelector('[data-tab="results"]').textContent = lang['tab.results'];
-            document.querySelector('[data-tab="measures"]').textContent = lang['tab.measures'];
-            
-            // Update all elements with data-i18n attribute
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (lang[key]) {
-                    element.textContent = lang[key];
+        
+        function generateTimeSlots(intervalMinutes) {
+            const slots = [];
+            for (let h = 0; h < 24; h++) {
+                for (let m = 0; m < 60; m += intervalMinutes) {
+                    const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                    if (intervalMinutes === 15) {
+                        slots.push({ value: time, text: time });
+                    } else if (intervalMinutes === 120 && m === 0) {
+                        const nextHour = String((h + 2) % 24).padStart(2, '0');
+                        const slotText = `${time} - ${nextHour}:00`;
+                        slots.push({ value: slotText, text: slotText });
+                    }
                 }
-            });
-            
-            // Update info boxes
-            if (currentLanguage === 'de') {
-                document.getElementById('infoBox1').innerHTML = `
-                    <strong>⚠️ P3 AI Policy:</strong> Aktuell sind nur folgende KI-Tools für den Einsatz freigegeben:
-                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-                        <li><strong>AI Builder in Power Platform</strong> - für Automatisierung und intelligente Workflows</li>
-                        <li><strong>M365 Copilot</strong> - für Produktivitätssteigerung in Microsoft 365</li>
-                    </ul>
-                    Andere KI-Systeme erfordern eine Genehmigung durch das P3 Management.
-                `;
-            } else {
-                document.getElementById('infoBox1').innerHTML = `
-                    <strong>⚠️ P3 AI Policy:</strong> Currently, only the following AI tools are approved for use:
-                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-                        <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
-                        <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
-                    </ul>
-                    Other AI systems require approval from P3 Management.
-                `;
             }
-            
-            document.documentElement.lang = currentLanguage;
+            return slots;
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            if (event && event.target) {
-                event.target.classList.add('active');
-            } else {
-                const activeTabElement = document.querySelector(`.tab[onclick="showTab('${tabName}')"]`);
-                if (activeTabElement) activeTabElement.classList.add('active');
+        const arrivalSlots = generateTimeSlots(120);
+        const departureSlots = generateTimeSlots(15);
+        
+        function getOrdersFromUrl() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const encodedData = params.get('data');
+                if (!encodedData) {
+                    return [];
+                }
+                const jsonString = decodeURIComponent(encodedData);
+                const parsedData = JSON.parse(jsonString);
+                return Array.isArray(parsedData) ? parsedData : [parsedData];
+            } catch (e) {
+                console.error("Fehler beim Parsen der Bestelldaten:", e);
+                return [];
             }
         }
         
-        function getSelectedValues(selectId) {
-            const select = document.getElementById(selectId);
-            if (select.multiple) {
-                return Array.from(select.selectedOptions).map(option => option.value).filter(value => value !== '');
-            } else {
-                return select.value;
-            }
-        }
-
-        function getCombinedDataScore(dataTypes) {
-            const dataScores = {
-                'public_only': 0,
-                'company_general': 1,
-                'client_confidential': 2,
-                'strategic_sensitive': 3,
-                'personal_data': 4,
-                'special_categories': 5
-            };
+        function createOrderCard(order) {
+            const id = order.orderId || 'UNKNOWN';
             
-            if (!Array.isArray(dataTypes) || dataTypes.length === 0) return 0;
-            return Math.max(...dataTypes.map(type => dataScores[type] || 0));
+            const profileOptions = CONFIG.profiles.map(p => 
+                `<option value="${p}" ${p === order.wagonProfile ? 'selected' : ''}>${p}</option>`
+            ).join('');
+            
+            const typeOptions = CONFIG.wagonTypes.map(t => 
+                `<option value="${t}" ${t === order.wagonType ? 'selected' : ''}>${t}</option>`
+            ).join('');
+
+            const reasonOptions = CONFIG.reasons.map(r => 
+                `<option value="${r.value}">${r.text}</option>`
+            ).join('');
+
+            const arrivalOptions = arrivalSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+
+            const departureOptions = departureSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+
+            return `
+                <div class="order-card" data-order-id="${id}">
+                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
+                    <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="wagons-${id}" class="form-label">Wagons (Qty.)</label>
+                            <input type="number" class="form-control" id="wagons-${id}" name="wagons-${id}" value="${order.wagons || 1}" min="1" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date-${id}" class="form-label">Transport Date</label>
+                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${order.transportDate || ''}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="profile-${id}" class="form-label">Wagon Profile</label>
+                            <select class="form-select" id="profile-${id}" name="profile-${id}" required>
+                                ${profileOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="type-${id}" class="form-label">Wagon Type</label>
+                            <select class="form-select" id="type-${id}" name="type-${id}" required>
+                                ${typeOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="arrival-${id}" class="form-label">Arrival Time Slot (2h)</label>
+                            <select class="form-select" id="arrival-${id}" name="arrival-${id}" required>
+                                ${arrivalOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="departure-${id}" class="form-label">Departure Time (15min)</label>
+                            <select class="form-select" id="departure-${id}" name="departure-${id}" required>
+                                ${departureOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
+                            <select class="form-select" id="reason-${id}" name="reason-${id}" required>
+                                ${reasonOptions}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="comment-${id}" class="form-label">Comment (Free Text)</label>
+                            <textarea class="form-control" id="comment-${id}" name="comment-${id}" rows="2" placeholder="Freitextkommentar eingeben..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
         
-        function getSelectedLabels(selectId) {
-            const select = document.getElementById(selectId);
-            if (select.multiple) {
-                return Array.from(select.selectedOptions).map(option => option.text).filter(text => !text.includes('...'));
-            } else {
-                const selectedOption = select.options[select.selectedIndex];
-                return selectedOption ? selectedOption.text : '';
-            }
-        }
-
-        function calculateRisk() {
-            const projectType = getSelectedValues('projectType');
-            const aiTool = getSelectedValues('aiTool');
-            const aiUseCases = getSelectedValues('aiUseCase');
-            const dataTypes = getSelectedValues('dataType');
-            const autonomy = getSelectedValues('autonomy');
-            const impact = getSelectedValues('impact');
-            const transparency = getSelectedValues('transparency');
-            
-            // Get time slot values
-            const arrivalStart = document.getElementById('arrivalStart').value;
-            const arrivalEnd = document.getElementById('arrivalEnd').value;
-            const departureStart = document.getElementById('departureStart').value;
-            const departureEnd = document.getElementById('departureEnd').value;
-            
-            if (!projectType || !aiTool || aiUseCases.length === 0 || dataTypes.length === 0 || !autonomy || !impact || !transparency) {
+        function loadForm() {
+            const ordersData = getOrdersFromUrl();
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '';
+            if (ordersData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Fehler:</strong> Es wurden keine Bestelldaten übergeben oder die Daten konnten nicht geladen werden.
+                        <br><br>
+                        Bitte wenden Sie sich an das Logistik-Team oder überprüfen Sie den Link.
+                    </div>`;
+                const submitBtn = document.querySelector('#order-form button[type="submit"]');
+                if (submitBtn) submitBtn.disabled = true;
                 return;
             }
-            
-            currentAssessment = performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency, {
-                arrivalStart,
-                arrivalEnd,
-                departureStart,
-                departureEnd
+            ordersData.forEach(order => {
+                container.innerHTML += createOrderCard(order);
             });
-            updateResults(currentAssessment);
         }
 
-        function performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency, timeSlots) {
-            let riskScore = 0;
-            let measures = [];
-            
-            if (aiTool === 'other') {
-                riskScore += 3;
-                measures.push({
-                    title: currentLanguage === 'de' ? '🚨 GENEHMIGUNG ERFORDERLICH' : '🚨 APPROVAL REQUIRED',
-                    description: currentLanguage === 'de' 
-                        ? 'Dieses KI-System ist nicht freigegeben! Gemäß P3 AI Policy ist vor dem Einsatz eine formelle Genehmigung durch das Management einzuholen.'
-                        : 'This AI system is not approved! According to P3 AI Policy, formal approval from management must be obtained before deployment.'
-                });
-            }
-            
-            const autonomyScores = {
-                'support_only': 1,
-                'interactive': 2,
-                'semi_automated': 3,
-                'automated': 4,
-                'critical_automated': 5
-            };
-            riskScore += autonomyScores[autonomy] || 0;
-            
-            const maxDataScore = getCombinedDataScore(dataTypes);
-            riskScore += maxDataScore;
-            
-            const impactScores = {
-                'internal_efficiency': 1,
-                'project_support': 2,
-                'client_deliverable': 3,
-                'strategic_decision': 4,
-                'critical_operations': 5
-            };
-            riskScore += impactScores[impact] || 0;
-            
-            if (transparency === 'low') riskScore += 2;
-            else if (transparency === 'medium') riskScore += 1;
-            
-            let riskLevel = 'minimal';
-            if (aiTool === 'other' || riskScore >= 13) riskLevel = 'critical';
-            else if (riskScore >= 10) riskLevel = 'high';
-            else if (riskScore >= 7) riskLevel = 'medium';
-            else if (riskScore >= 4) riskLevel = 'low';
-            
-            measures = generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures);
-            
-            return {
-                riskLevel,
-                riskScore,
-                projectType,
-                aiTool,
-                aiUseCases,
-                dataTypes,
-                autonomy,
-                impact,
-                transparency,
-                timeSlots,
-                measures
-            };
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
         }
 
-        function generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures) {
-            const isGerman = currentLanguage === 'de';
-            
-            if (aiTool === 'm365_copilot' || aiTool === 'ai_builder') {
-                measures.push({
-                    title: isGerman ? '✅ P3-freigegebenes Tool' : '✅ P3-approved Tool',
-                    description: isGerman 
-                        ? 'Dieses KI-System ist gemäß P3 AI Policy freigegeben und kann nach Beachtung der Sicherheits- und Compliance-Richtlinien eingesetzt werden.'
-                        : 'This AI system is approved according to P3 AI Policy and can be deployed following security and compliance guidelines.'
-                });
-            }
-            
-            if (riskLevel === 'critical') {
-                measures.push({
-                    title: isGerman ? 'Hochrisiko-System gemäß EU AI Act' : 'High-risk System under EU AI Act',
-                    description: isGerman 
-                        ? 'Umfassende Konformitätsbewertung erforderlich. Dokumentation aller technischen Spezifikationen, Risikomanagement und Qualitätssicherung.'
-                        : 'Comprehensive conformity assessment required. Documentation of all technical specifications, risk management and quality assurance.'
-                });
-                measures.push({
-                    title: isGerman ? 'Executive Approval' : 'Executive Approval',
-                    description: isGerman 
-                        ? 'Projekt erfordert Freigabe durch P3 Management und ggf. Client C-Level vor Deployment.'
-                        : 'Project requires approval from P3 Management and possibly client C-Level before deployment.'
-                });
-            }
-            
-            if (riskLevel === 'high' || riskLevel === 'critical') {
-                measures.push({
-                    title: 'Human Oversight',
-                    description: isGerman 
-                        ? 'Implementierung eines robusten Human-in-the-Loop Systems. Kritische KI-Entscheidungen müssen von qualifizierten Consultants validiert werden.'
-                        : 'Implementation of a robust Human-in-the-Loop system. Critical AI decisions must be validated by qualified consultants.'
-                });
-                measures.push({
-                    title: 'Bias & Fairness Testing',
-                    description: isGerman 
-                        ? 'Systematische Überprüfung auf Verzerrungen und Diskriminierung. Besonders wichtig bei Entscheidungen mit personellem Impact.'
-                        : 'Systematic review for bias and discrimination. Especially important for decisions with personnel impact.'
-                });
-            }
-            
-            if (dataTypes.includes('personal_data') || dataTypes.includes('special_categories')) {
-                measures.push({
-                    title: isGerman ? 'DSGVO Compliance' : 'GDPR Compliance',
-                    description: isGerman 
-                        ? 'Data Protection Impact Assessment (DPIA) durchführen. Rechtsgrundlage prüfen, Betroffenenrechte sicherstellen.'
-                        : 'Conduct Data Protection Impact Assessment (DPIA). Review legal basis, ensure data subject rights.'
-                });
-                measures.push({
-                    title: isGerman ? 'Data Minimization' : 'Data Minimization',
-                    description: isGerman 
-                        ? 'Nur absolut notwendige Daten verarbeiten. Anonymisierung/Pseudonymisierung wo möglich implementieren.'
-                        : 'Process only absolutely necessary data. Implement anonymization/pseudonymization where possible.'
-                });
-            }
-            
-            if (dataTypes.includes('client_confidential') || dataTypes.includes('strategic_sensitive')) {
-                measures.push({
-                    title: isGerman ? 'Vertraulichkeit & IP-Schutz' : 'Confidentiality & IP Protection',
-                    description: isGerman 
-                        ? 'NDA-Compliance sicherstellen. Bei externen KI-Services: On-Premise oder Private-Cloud Lösung bevorzugen. Data Residency Requirements prüfen.'
-                        : 'Ensure NDA compliance. For external AI services: prefer on-premise or private cloud solutions. Review data residency requirements.'
-                });
-            }
-            
-            if (transparency === 'low') {
-                measures.push({
-                    title: 'Explainability Enhancement',
-                    description: isGerman 
-                        ? 'Explainable AI Techniken implementieren (LIME, SHAP). Dokumentation der Modell-Logik für Client Transparency.'
-                        : 'Implement Explainable AI techniques (LIME, SHAP). Document model logic for client transparency.'
-                });
-            }
-            
-            if (autonomy === 'automated' || autonomy === 'critical_automated') {
-                measures.push({
-                    title: 'Monitoring & Audit Trail',
-                    description: isGerman 
-                        ? 'Continuous Monitoring der KI-Entscheidungen. Vollständige Logging-Infrastruktur für Audits und Fehleranalyse.'
-                        : 'Continuous monitoring of AI decisions. Complete logging infrastructure for audits and error analysis.'
-                });
-            }
-            
-            if (aiUseCases.includes('risk_assessment')) {
-                measures.push({
-                    title: isGerman ? 'Validierung & Backtesting' : 'Validation & Backtesting',
-                    description: isGerman 
-                        ? 'Regelmäßige Validierung der Risk-Assessment-Modelle gegen Real-World Outcomes. Confidence Intervals transparent kommunizieren.'
-                        : 'Regular validation of risk assessment models against real-world outcomes. Communicate confidence intervals transparently.'
-                });
-            }
-            
-            if (aiUseCases.includes('code_generation')) {
-                measures.push({
-                    title: 'Security Review',
-                    description: isGerman 
-                        ? 'Code-Reviews für KI-generierten Code verpflichtend. Security Scanning und Vulnerability Assessment integrieren.'
-                        : 'Mandatory code reviews for AI-generated code. Integrate security scanning and vulnerability assessment.'
-                });
-            }
-            
-            measures.push({
-                title: isGerman ? 'Dokumentation & Governance' : 'Documentation & Governance',
-                description: isGerman 
-                    ? 'AI Model Card erstellen: Zweck, Limitationen, Training Data, Performance Metrics. Version Control für Model Updates.'
-                    : 'Create AI Model Card: purpose, limitations, training data, performance metrics. Version control for model updates.'
-            });
-            
-            measures.push({
-                title: 'Stakeholder Communication',
-                description: isGerman 
-                    ? 'Transparente Kommunikation über KI-Einsatz gegenüber Kunden und betroffenen Personen. Klare Verantwortlichkeiten definieren.'
-                    : 'Transparent communication about AI deployment to clients and affected persons. Define clear responsibilities.'
-            });
-            
-            return measures;
-        }
-
-        function updateResults(assessment) {
-            const lang = translations[currentLanguage];
-            const riskClass = `risk-${assessment.riskLevel}`;
-            const riskLabel = lang[`risk.${assessment.riskLevel}`];
-            
-            // Build time slot display HTML
-            let timeSlotHTML = '';
-            if (assessment.timeSlots && (assessment.timeSlots.arrivalStart || assessment.timeSlots.departureStart)) {
-                timeSlotHTML = '<div class="result-card"><div class="result-title">🕐 ' + (currentLanguage === 'de' ? 'Zeitfenster' : 'Time Slots') + '</div>';
-                
-                if (assessment.timeSlots.arrivalStart) {
-                    timeSlotHTML += `<p><strong>${lang['result.arrivalSlot']}:</strong> ${assessment.timeSlots.arrivalStart} - ${assessment.timeSlots.arrivalEnd}</p>`;
-                }
-                
-                if (assessment.timeSlots.departureStart) {
-                    timeSlotHTML += `<p><strong>${lang['result.departureSlot']}:</strong> ${assessment.timeSlots.departureStart} - ${assessment.timeSlots.departureEnd}</p>`;
-                }
-                
-                timeSlotHTML += '</div>';
-            }
-            
-            document.getElementById('resultsContent').innerHTML = `
-                <div class="result-card">
-                    <div class="result-header">
-                        <div class="result-title">${lang['result.riskAssessment']}</div>
-                        <span class="risk-badge ${riskClass}">${riskLabel}</span>
-                    </div>
-                    <p><strong>${lang['result.riskScore']}:</strong> ${assessment.riskScore}/15</p>
-                    <p><strong>${lang['result.projectType']}:</strong> ${getSelectedLabels('projectType')}</p>
-                    <p><strong>${lang['result.recommendedMeasures']}:</strong> ${assessment.measures.length}</p>
-                </div>
-                
-                ${timeSlotHTML}
-                
-                <div class="result-card">
-                    <div class="result-title">${lang['result.assessmentDetails']}</div>
-                    <p><strong>${lang['result.aiTool']}:</strong> ${getSelectedLabels('aiTool')}</p>
-                    <p><strong>${lang['result.aiUseCase']}:</strong> ${getSelectedLabels('aiUseCase').join(', ')}</p>
-                    <p><strong>${lang['result.dataType']}:</strong> ${getSelectedLabels('dataType').join(', ')}</p>
-                    <p><strong>${lang['result.autonomy']}:</strong> ${getSelectedLabels('autonomy')}</p>
-                    <p><strong>${lang['result.impact']}:</strong> ${getSelectedLabels('impact')}</p>
-                    <p><strong>${lang['result.transparency']}:</strong> ${getSelectedLabels('transparency')}</p>
-                </div>
-            `;
-            
-            let measuresHTML = `<h3 class="section-title">${lang['measures.title']}</h3>`;
-            assessment.measures.forEach((measure, index) => {
-                measuresHTML += `
-                    <div class="measure-item">
-                        <div class="measure-title">${index + 1}. ${measure.title}</div>
-                        <div>${measure.description}</div>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('measuresContent').innerHTML = measuresHTML;
-        }
-
-        function downloadPDF() {
-            if (!currentAssessment) {
-                alert(currentLanguage === 'de' 
-                    ? 'Bitte führen Sie zunächst das Assessment durch.' 
-                    : 'Please complete the assessment first.');
-                return;
-            }
-            
-            const aiUseCasesLabel = getSelectedLabels('aiUseCase').join(' | ');
-            const dataTypesLabel = getSelectedLabels('dataType').join(' | ');
-            const lang = translations[currentLanguage];
-            
-            const rows = [
-                currentLanguage === 'de' ? 'Kategorie;Wert' : 'Category;Value',
-                `${currentLanguage === 'de' ? 'Risikostufe' : 'Risk Level'};${lang[`risk.${currentAssessment.riskLevel}`]}`,
-                `Risk Score;${currentAssessment.riskScore}/15`,
-                `${lang['result.projectType']};${getSelectedLabels('projectType')}`,
-                `${lang['result.aiTool']};${getSelectedLabels('aiTool')}`,
-                `${lang['result.aiUseCase']};"${aiUseCasesLabel.replace(/"/g, '""')}"`,
-                `${lang['result.dataType']};"${dataTypesLabel.replace(/"/g, '""')}"`,
-                `${lang['result.autonomy']};${getSelectedLabels('autonomy')}`,
-                `${lang['result.impact']};${getSelectedLabels('impact')}`,
-                `${lang['result.transparency']};${getSelectedLabels('transparency')}`,
-            ];
-            
-            // Add time slots to CSV if they exist
-            if (currentAssessment.timeSlots) {
-                if (currentAssessment.timeSlots.arrivalStart) {
-                    rows.push(`${lang['result.arrivalSlot']};${currentAssessment.timeSlots.arrivalStart} - ${currentAssessment.timeSlots.arrivalEnd}`);
-                }
-                if (currentAssessment.timeSlots.departureStart) {
-                    rows.push(`${lang['result.departureSlot']};${currentAssessment.timeSlots.departureStart} - ${currentAssessment.timeSlots.departureEnd}`);
-                }
-            }
-            
-            rows.push('');
-            rows.push(lang['measures.title']);
-            
-            currentAssessment.measures.forEach((measure, index) => {
-                rows.push(`${index + 1}. ${measure.title};"${measure.description.replace(/"/g, '""')}"`);
-            });
-            
-            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-            const blob = new Blob([bom, rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `P3_AI_Risk_Assessment_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-        }
-
-        function resetForm() {
-            document.querySelectorAll('select').forEach(select => {
-                if (select.multiple) {
-                    Array.from(select.options).forEach(option => option.selected = false);
-                } else {
-                    select.value = '';
-                }
-            });
-            
-            // Reset time inputs
-            document.getElementById('arrivalStart').value = '';
-            document.getElementById('arrivalEnd').value = '';
-            document.getElementById('departureStart').value = '';
-            document.getElementById('departureEnd').value = '';
-            document.getElementById('arrivalSlotDisplay').style.display = 'none';
-            document.getElementById('departureSlotDisplay').style.display = 'none';
-            
-            currentAssessment = null;
-            const lang = translations[currentLanguage];
-            
-            document.getElementById('resultsContent').innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📊</div>
-                    <p>${lang['empty.results']}</p>
-                </div>
-            `;
-            
-            document.getElementById('measuresContent').innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">✅</div>
-                    <p>${lang['empty.measures']}</p>
-                </div>
-            `;
-            
-            showTab('assessment');
-        }
-
-        // Initialize language on page load
+        // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            const savedLanguage = localStorage.getItem('language');
-            if (savedLanguage) {
-                currentLanguage = savedLanguage;
-            }
-            updateLanguage();
+            console.log('Page loaded - Login screen should be visible');
+            
+            // Handle Login with Power Automate Authentication
+            document.getElementById('login-form').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                
+                // Show loading state
+                const loginBtn = document.getElementById('login-btn');
+                const loginBtnText = document.getElementById('login-btn-text');
+                const loginSpinner = document.getElementById('login-spinner');
+                
+                loginBtn.disabled = true;
+                loginBtnText.textContent = 'Überprüfung...';
+                loginSpinner.classList.remove('hidden');
+                
+                try {
+                    // Call Power Automate authentication flow
+                    const response = await fetch(AUTH_FLOW_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok && result.authenticated === true) {
+                        console.log('Login successful');
+                        // Store session token if provided
+                        sessionToken = result.token || null;
+                        
+                        // Successful login
+                        document.getElementById('login-screen').classList.add('hidden');
+                        document.getElementById('main-app').classList.remove('hidden');
+                        loadForm();
+                    } else {
+                        console.log('Login failed');
+                        showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
+                        
+                        // Reset button state
+                        loginBtn.disabled = false;
+                        loginBtnText.textContent = 'Anmelden';
+                        loginSpinner.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Authentication error:', error);
+                    showLoginAlert('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'danger');
+                    
+                    // Reset button state
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Anmelden';
+                    loginSpinner.classList.add('hidden');
+                }
+            });
+
+            // Handle Order Form Submission
+            document.getElementById('order-form').addEventListener('submit', async function (event) {
+                event.preventDefault();
+                
+                const ordersData = [];
+                const orderCards = document.querySelectorAll('.order-card');
+                
+                orderCards.forEach(card => {
+                    const id = card.getAttribute('data-order-id');
+                    
+                    const orderData = {
+                        orderId: id,
+                        wagons: parseInt(document.getElementById(`wagons-${id}`).value, 10),
+                        transportDate: document.getElementById(`date-${id}`).value,
+                        wagonProfile: document.getElementById(`profile-${id}`).value,
+                        wagonType: document.getElementById(`type-${id}`).value,
+                        timeSlotArrival: document.getElementById(`arrival-${id}`).value,
+                        departureTime: document.getElementById(`departure-${id}`).value,
+                        reasonUnderdelivery: document.getElementById(`reason-${id}`).value,
+                        comment: document.getElementById(`comment-${id}`).value
+                    };
+                    
+                    ordersData.push(orderData);
+                });
+                
+                const finalPayload = {
+                    submissionTimestamp: new Date().toISOString(),
+                    sessionToken: sessionToken,
+                    orders: ordersData
+                };
+
+                try {
+                    const response = await fetch(ORDER_SUBMIT_URL, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(finalPayload)
+                    });
+
+                    if (response.ok) {
+                        showAlert('Success! Alle Transportaufträge wurden bestätigt und an die Logistik gesendet.', 'success');
+                        document.getElementById('order-form').querySelector('button[type="submit"]').disabled = true;
+                    } else {
+                        const errorText = await response.text();
+                        showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
+                    }
+                } catch (error) {
+                    showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                    console.error("Fetch Error:", error);
+                }
+            });
         });
     </script>
 </body>
