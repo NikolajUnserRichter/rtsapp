@@ -260,10 +260,31 @@
         const arrivalSlots = generateTimeSlots(120);
         const departureSlots = generateTimeSlots(15);
         
+        // Normalize the data to match the expected format
+        function normalizeOrder(order) {
+            const departure = order.Departure || order.departure || 'N/A';
+            const destination = order.Destination || order.destination || 'N/A';
+            
+            return {
+                orderId: order.OrderID || order.orderId,
+                supplier: order.SupplierName || order.supplier,
+                cw: order.CW || order.cw,
+                wagons: order.RequiredWagons || order.wagons,
+                transportDate: (order.Transportdatum || order.transportDate || '').trim(),
+                wagonProfile: order.WagonProfile || order.wagonProfile,
+                wagonType: order.WagonType || order.wagonType,
+                departure: departure,
+                destination: destination,
+                route: `${departure} nach ${destination}`,
+                deliveryDate: order.deliveryDate || ''
+            };
+        }
+        
         function getOrdersFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const encodedData = params.get('data');
+            
             try {
-                const params = new URLSearchParams(window.location.search);
-                const encodedData = params.get('data');
                 if (!encodedData) {
                     return [];
                 }
@@ -273,35 +294,24 @@
                 // Try to decode as base64 first
                 try {
                     // Decode base64
-                    let decoded = atob(encodedData);
-                    
-                    // Remove any control characters (newlines, tabs, carriage returns, etc.)
-                    decoded = decoded.replace(/[\r\n\t]/g, '');
-                    
-                    // Check if the result is URL-encoded (contains %)
-                    if (decoded.includes('%')) {
-                        jsonString = decodeURIComponent(decoded);
-                        console.log('Data decoded from base64 + URL encoding');
-                    } else {
-                        jsonString = decoded;
-                        console.log('Data decoded from base64');
-                    }
+                    jsonString = atob(encodedData);
+                    console.log('Data decoded from base64');
                 } catch (base64Error) {
                     // If base64 decoding fails, try URL decoding (backward compatibility)
                     console.log('Base64 decoding failed, trying URL decode for backward compatibility');
                     jsonString = decodeURIComponent(encodedData);
                 }
                 
-                // Additional cleanup: remove any remaining control characters
-                jsonString = jsonString.replace(/[\x00-\x1F\x7F]/g, '');
-                
                 console.log('Decoded JSON string:', jsonString);
                 
                 const parsedData = JSON.parse(jsonString);
-                return Array.isArray(parsedData) ? parsedData : [parsedData];
+                const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+                
+                // Normalize all orders to match expected format
+                return ordersArray.map(order => normalizeOrder(order));
             } catch (e) {
                 console.error("Fehler beim Parsen der Bestelldaten:", e);
-                console.error("Encoded data:", params.get('data'));
+                console.error("Encoded data:", encodedData);
                 return [];
             }
         }
@@ -328,6 +338,17 @@
             const departureOptions = departureSlots.map(s => 
                 `<option value="${s.value}">${s.text}</option>`
             ).join('');
+            
+            // Convert date from DD.MM.YYYY to YYYY-MM-DD for input[type="date"]
+            function convertDate(dateStr) {
+                if (!dateStr) return '';
+                const trimmed = dateStr.trim();
+                const parts = trimmed.split('.');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+                return trimmed;
+            }
 
             return `
                 <div class="order-card" data-order-id="${id}">
@@ -340,7 +361,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="date-${id}" class="form-label">Transport Date</label>
-                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${order.transportDate || ''}" required>
+                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${convertDate(order.transportDate)}" required>
                         </div>
                         <div class="col-md-4">
                             <label for="profile-${id}" class="form-label">Wagon Profile</label>
@@ -357,7 +378,7 @@
                         
                         <!-- DEPARTURE TIME SLOTS -->
                         <div class="col-12 mt-3">
-                            <h6 class="text-primary border-bottom pb-2">📍 Departure Time Slots</h6>
+                            <h6 class="text-primary border-bottom pb-2">📍 Departure Time Slots (${order.departure})</h6>
                         </div>
                         <div class="col-md-6">
                             <label for="departure-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
@@ -374,11 +395,11 @@
                         
                         <!-- DESTINATION TIME SLOTS -->
                         <div class="col-12 mt-3">
-                            <h6 class="text-success border-bottom pb-2">🎯 Destination Time Slots</h6>
+                            <h6 class="text-success border-bottom pb-2">🎯 Destination Time Slots (${order.destination})</h6>
                         </div>
                         <div class="col-md-4">
                             <label for="delivery-date-${id}" class="form-label">Delivery Date</label>
-                            <input type="date" class="form-control" id="delivery-date-${id}" name="delivery-date-${id}" value="${order.deliveryDate || ''}" required>
+                            <input type="date" class="form-control" id="delivery-date-${id}" name="delivery-date-${id}" value="${convertDate(order.deliveryDate)}" required>
                         </div>
                         <div class="col-md-4">
                             <label for="destination-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
