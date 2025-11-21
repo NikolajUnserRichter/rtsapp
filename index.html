@@ -280,21 +280,21 @@
                     <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
                     <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
                     <div class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="wagons-${id}" class="form-label">Wagons (Qty.)</label>
                             <input type="number" class="form-control" id="wagons-${id}" name="wagons-${id}" value="${order.wagons || 1}" min="1" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="date-${id}" class="form-label">Transport Date</label>
                             <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${order.transportDate || ''}" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="profile-${id}" class="form-label">Wagon Profile</label>
                             <select class="form-select" id="profile-${id}" name="profile-${id}" required>
                                 ${profileOptions}
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-12">
                             <label for="type-${id}" class="form-label">Wagon Type</label>
                             <select class="form-select" id="type-${id}" name="type-${id}" required>
                                 ${typeOptions}
@@ -322,13 +322,17 @@
                         <div class="col-12 mt-3">
                             <h6 class="text-success border-bottom pb-2">🎯 Destination Time Slots</h6>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label for="delivery-date-${id}" class="form-label">Delivery Date</label>
+                            <input type="date" class="form-control" id="delivery-date-${id}" name="delivery-date-${id}" value="${order.deliveryDate || ''}" required>
+                        </div>
+                        <div class="col-md-4">
                             <label for="destination-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
                             <select class="form-select" id="destination-arrival-slot-${id}" name="destination-arrival-slot-${id}" required>
                                 ${arrivalOptions}
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="destination-departure-time-${id}" class="form-label">Departure Time (15min)</label>
                             <select class="form-select" id="destination-departure-time-${id}" name="destination-departure-time-${id}" required>
                                 ${departureOptions}
@@ -455,6 +459,7 @@
                         orderId: id,
                         wagons: parseInt(document.getElementById(`wagons-${id}`).value, 10),
                         transportDate: document.getElementById(`date-${id}`).value,
+                        deliveryDate: document.getElementById(`delivery-date-${id}`).value,
                         wagonProfile: document.getElementById(`profile-${id}`).value,
                         wagonType: document.getElementById(`type-${id}`).value,
                         departureArrivalSlot: document.getElementById(`departure-arrival-slot-${id}`).value,
