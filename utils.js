@@ -79,17 +79,57 @@ const Utils = {
     decodeUrlData(encodedData) {
         if (!encodedData) return null;
         
+        // Regex patterns for detecting encoding types
+        const URL_ENCODED_PATTERN = /%[0-9A-Fa-f]{2}/;
+        
         try {
-            // Try base64 decoding first
-            return atob(encodedData);
-        } catch (base64Error) {
-            try {
-                // Fallback to URL decoding for backward compatibility
-                return decodeURIComponent(encodedData);
-            } catch (urlError) {
-                console.error('Failed to decode data:', urlError);
-                return null;
+            // Check if it looks like URL-encoded data (contains % followed by hex digits)
+            if (URL_ENCODED_PATTERN.test(encodedData)) {
+                // Handle URL encoding - decode multiple times if needed
+                let decoded = encodedData;
+                let previousDecoded;
+                let iterations = 0;
+                const MAX_ITERATIONS = 10; // Prevent infinite loops
+                
+                // Keep decoding while the string changes and still contains encoded characters
+                // This handles cases where data was double (or more) encoded
+                do {
+                    previousDecoded = decoded;
+                    try {
+                        decoded = decodeURIComponent(decoded);
+                    } catch (e) {
+                        // If decode fails, return what we have so far
+                        break;
+                    }
+                    iterations++;
+                } while (decoded !== previousDecoded && URL_ENCODED_PATTERN.test(decoded) && iterations < MAX_ITERATIONS);
+                
+                return decoded;
             }
+            
+            // Check if it looks like base64 (only contains base64 characters and has proper length)
+            // Base64 strings must have length divisible by 4 (with padding)
+            if (/^[A-Za-z0-9+/]+={0,2}$/.test(encodedData) && encodedData.length % 4 === 0 && encodedData.length >= 4) {
+                try {
+                    const decoded = atob(encodedData);
+                    // Verify the decoded result doesn't contain replacement characters (�)
+                    // which indicate invalid UTF-8 sequences from incorrect base64 decoding
+                    if (decoded.includes('\uFFFD')) {
+                        // Contains replacement characters, likely not valid base64
+                        return encodedData;
+                    }
+                    // Base64 decode succeeded and result looks reasonable
+                    return decoded;
+                } catch (base64Error) {
+                    // Base64 decode failed, fall through to return original
+                }
+            }
+            
+            // If it doesn't match URL encoding or base64 patterns, assume it's already plain text
+            return encodedData;
+        } catch (error) {
+            console.error('Failed to decode data:', error);
+            return encodedData; // Return original if all else fails
         }
     },
 
