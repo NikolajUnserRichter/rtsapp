@@ -71,7 +71,8 @@
         
         if (result.success) {
             UIModule.showAlert('alert-container', result.message, 'success');
-            // Keep submit button disabled after successful submission
+            // Update button to show success state and keep it disabled
+            submitButton.innerHTML = '<span class="me-2">✓</span>Erfolgreich gesendet';
         } else {
             UIModule.showAlert('alert-container', result.message, 'danger');
             // Re-enable submit button on error
