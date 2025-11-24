@@ -47,9 +47,15 @@ The application is built with a modular architecture:
 
 - Content Security Policy (CSP) headers
 - Input sanitization to prevent XSS attacks
-- Rate limiting on login attempts (5 attempts per 15 minutes)
+- Rate limiting on login attempts (5 attempts per 15 minutes, persisted in localStorage)
 - Session token management
 - HTML escaping for user-generated content
+
+**Security Considerations for Production:**
+- API URLs currently contain authentication signatures in client-side code
+- Consider implementing a backend proxy to hide sensitive endpoints
+- Implement proper token rotation and OAuth flows for production deployment
+- Use environment variables and build process for configuration management
 
 ### Accessibility Features
 

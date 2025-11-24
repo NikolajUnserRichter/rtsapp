@@ -119,21 +119,6 @@
                     target.setCustomValidity('');
                 }
             }
-            
-            // Validate date inputs
-            if (target.type === 'date' && target.value) {
-                const selectedDate = new Date(target.value);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                // Check if date is in the past (optional validation)
-                // Uncomment if you want to prevent past dates
-                // if (selectedDate < today) {
-                //     target.setCustomValidity('Datum darf nicht in der Vergangenheit liegen.');
-                // } else {
-                //     target.setCustomValidity('');
-                // }
-            }
         });
     }
 

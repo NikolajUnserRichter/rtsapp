@@ -6,8 +6,38 @@
 const AuthModule = (function() {
     // Private variables
     let sessionToken = null;
-    let loginAttempts = 0;
-    let lastAttemptTime = 0;
+    
+    // Load login attempts from localStorage for persistence
+    const STORAGE_KEY = 'rts_login_attempts';
+    
+    /**
+     * Get stored login attempts data
+     * @returns {{count: number, timestamp: number}}
+     */
+    function getStoredAttempts() {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.warn('Failed to read login attempts from storage:', e);
+        }
+        return { count: 0, timestamp: 0 };
+    }
+    
+    /**
+     * Store login attempts data
+     * @param {number} count - Number of attempts
+     * @param {number} timestamp - Timestamp of last attempt
+     */
+    function storeAttempts(count, timestamp) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ count, timestamp }));
+        } catch (e) {
+            console.warn('Failed to store login attempts:', e);
+        }
+    }
 
     /**
      * Check if user has exceeded login attempts
@@ -15,30 +45,31 @@ const AuthModule = (function() {
      */
     function isTooManyAttempts() {
         const currentTime = Date.now();
-        const timeSinceLastAttempt = currentTime - lastAttemptTime;
+        const stored = getStoredAttempts();
+        const timeSinceLastAttempt = currentTime - stored.timestamp;
         
         // Reset counter if window has passed
         if (timeSinceLastAttempt > APP_CONFIG.security.loginAttemptWindow) {
-            loginAttempts = 0;
+            storeAttempts(0, 0);
+            return false;
         }
         
-        return loginAttempts >= APP_CONFIG.security.maxLoginAttempts;
+        return stored.count >= APP_CONFIG.security.maxLoginAttempts;
     }
 
     /**
      * Record a login attempt
      */
     function recordAttempt() {
-        loginAttempts++;
-        lastAttemptTime = Date.now();
+        const stored = getStoredAttempts();
+        storeAttempts(stored.count + 1, Date.now());
     }
 
     /**
      * Reset login attempts counter
      */
     function resetAttempts() {
-        loginAttempts = 0;
-        lastAttemptTime = 0;
+        storeAttempts(0, 0);
     }
 
     /**

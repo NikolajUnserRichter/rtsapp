@@ -35,7 +35,17 @@ const Utils = {
         const trimmed = dateStr.trim();
         const parts = trimmed.split('.');
         if (parts.length === 3) {
-            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            const year = parseInt(parts[2], 10);
+            
+            // Validate parsed values
+            if (isNaN(day) || isNaN(month) || isNaN(year)) {
+                console.warn(`Invalid date format: ${dateStr}`);
+                return trimmed;
+            }
+            
+            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         }
         return trimmed;
     },

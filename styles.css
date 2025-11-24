@@ -330,17 +330,3 @@ textarea.form-control {
         background-color: var(--color-white);
     }
 }
-
-/* ============================================
-   DARK MODE SUPPORT (Optional Enhancement)
-   ============================================ */
-@media (prefers-color-scheme: dark) {
-    /* Uncomment to enable dark mode support
-    :root {
-        --color-light: #1f2937;
-        --color-white: #111827;
-        --color-text: #f9fafb;
-        --color-border: #374151;
-    }
-    */
-}

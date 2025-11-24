@@ -1,10 +1,17 @@
 /**
  * Application Configuration
  * Separating configuration from application logic for better maintainability
+ * 
+ * SECURITY NOTE: API URLs with authentication signatures are currently stored client-side.
+ * For production deployment, consider:
+ * 1. Moving sensitive URLs to server-side proxy endpoints
+ * 2. Using environment variables with a build process
+ * 3. Implementing token rotation mechanisms
+ * 4. Using OAuth or similar authentication flows
  */
 
 const APP_CONFIG = {
-    // API endpoints - should be moved to environment variables in production
+    // API endpoints - SECURITY: These should be proxied through a backend in production
     api: {
         authFlowUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
         orderSubmitUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48'

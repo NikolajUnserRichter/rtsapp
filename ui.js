@@ -216,10 +216,10 @@ const UIModule = (function() {
                         </select>
                     </div>
                     <div class="col-12">
-                        <label for="comment-${id}" class="form-label">Comment (Free Text)</label>
+                        <label for="comment-${id}" class="form-label" id="comment-label-${id}">Comment (Free Text)</label>
                         <textarea class="form-control" id="comment-${id}" name="comment-${id}" 
                                   rows="2" placeholder="Freitextkommentar eingeben..." 
-                                  maxlength="500" aria-label="Kommentarfeld"></textarea>
+                                  maxlength="500" aria-describedby="comment-label-${id}"></textarea>
                     </div>
                 </div>
             </div>
