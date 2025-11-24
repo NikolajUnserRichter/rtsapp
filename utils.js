@@ -85,6 +85,8 @@ const Utils = {
                 // Handle URL encoding - decode multiple times if needed
                 let decoded = encodedData;
                 let previousDecoded;
+                let iterations = 0;
+                const MAX_ITERATIONS = 10; // Prevent infinite loops
                 
                 // Keep decoding while the string changes and still contains encoded characters
                 // This handles cases where data was double (or more) encoded
@@ -96,16 +98,24 @@ const Utils = {
                         // If decode fails, return what we have so far
                         break;
                     }
-                } while (decoded !== previousDecoded && /%[0-9A-Fa-f]{2}/.test(decoded));
+                    iterations++;
+                } while (decoded !== previousDecoded && /%[0-9A-Fa-f]{2}/.test(decoded) && iterations < MAX_ITERATIONS);
                 
                 return decoded;
             }
             
-            // Check if it looks like base64 (only contains base64 characters)
-            if (/^[A-Za-z0-9+/=]+$/.test(encodedData)) {
+            // Check if it looks like base64 (only contains base64 characters and has proper length)
+            // Base64 strings must have length divisible by 4 (with padding)
+            if (/^[A-Za-z0-9+/]+={0,2}$/.test(encodedData) && encodedData.length % 4 === 0 && encodedData.length >= 4) {
                 try {
                     const decoded = atob(encodedData);
-                    // Base64 decode succeeded, return the result
+                    // Verify the decoded result doesn't contain replacement characters (�)
+                    // which indicate invalid UTF-8 sequences from incorrect base64 decoding
+                    if (decoded.includes('\uFFFD')) {
+                        // Contains replacement characters, likely not valid base64
+                        return encodedData;
+                    }
+                    // Base64 decode succeeded and result looks reasonable
                     return decoded;
                 } catch (base64Error) {
                     // Base64 decode failed, fall through to return original
