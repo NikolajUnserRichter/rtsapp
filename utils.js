@@ -79,9 +79,12 @@ const Utils = {
     decodeUrlData(encodedData) {
         if (!encodedData) return null;
         
+        // Regex patterns for detecting encoding types
+        const URL_ENCODED_PATTERN = /%[0-9A-Fa-f]{2}/;
+        
         try {
             // Check if it looks like URL-encoded data (contains % followed by hex digits)
-            if (/%[0-9A-Fa-f]{2}/.test(encodedData)) {
+            if (URL_ENCODED_PATTERN.test(encodedData)) {
                 // Handle URL encoding - decode multiple times if needed
                 let decoded = encodedData;
                 let previousDecoded;
@@ -99,7 +102,7 @@ const Utils = {
                         break;
                     }
                     iterations++;
-                } while (decoded !== previousDecoded && /%[0-9A-Fa-f]{2}/.test(decoded) && iterations < MAX_ITERATIONS);
+                } while (decoded !== previousDecoded && URL_ENCODED_PATTERN.test(decoded) && iterations < MAX_ITERATIONS);
                 
                 return decoded;
             }
