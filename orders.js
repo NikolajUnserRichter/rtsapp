@@ -85,9 +85,17 @@ const OrderModule = (function() {
             };
         }
 
+        const sessionToken = AuthModule.getSessionToken();
+        if (!sessionToken) {
+            return {
+                success: false,
+                message: 'Sitzung abgelaufen. Bitte melden Sie sich erneut an.'
+            };
+        }
+
         const payload = {
             submissionTimestamp: new Date().toISOString(),
-            sessionToken: AuthModule.getSessionToken(),
+            sessionToken: sessionToken,
             orders: orders
         };
 
@@ -95,7 +103,8 @@ const OrderModule = (function() {
             const response = await fetch(APP_CONFIG.api.orderSubmitUrl, {
                 method: 'POST',
                 headers: { 
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Session-Token': sessionToken
                 },
                 body: JSON.stringify(payload)
             });
