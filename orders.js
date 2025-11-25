@@ -26,7 +26,7 @@ const OrderModule = (function() {
                 departureTime: document.getElementById(`departure-time-${id}`)?.value || '',
                 destinationArrivalSlot: document.getElementById(`destination-arrival-slot-${id}`)?.value || '',
                 destinationDepartureTime: document.getElementById(`destination-departure-time-${id}`)?.value || '',
-                reasonUnderdelivery: document.getElementById(`reason-${id}`)?.value || '',
+                reasonUnderdelivery: document.getElementById(`reason-${id}`)?.selectedOptions[0]?.text || '',
                 comment: document.getElementById(`comment-${id}`)?.value || ''
             };
             
