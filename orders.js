@@ -130,10 +130,68 @@ const OrderModule = (function() {
         }
     }
 
+    /**
+     * Notify server that the link was opened
+     * Sends order IDs and timestamp when the link was opened
+     * @param {Array<Object>} orders - Array of order objects from URL
+     * @returns {Promise<{success: boolean, message: string}>}
+     */
+    async function notifyLinkOpened(orders) {
+        if (!orders || orders.length === 0) {
+            return {
+                success: false,
+                message: 'No orders to notify about.'
+            };
+        }
+
+        const orderIds = orders.map(order => order.orderId).filter(id => id != null && id !== '');
+        
+        if (orderIds.length === 0) {
+            return {
+                success: false,
+                message: 'No valid order IDs found.'
+            };
+        }
+
+        const payload = {
+            orderIds: orderIds,
+            linkOpenedTimestamp: new Date().toISOString()
+        };
+
+        try {
+            const response = await fetch(APP_CONFIG.api.linkOpenedUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                return {
+                    success: true,
+                    message: 'Link opened notification sent successfully.'
+                };
+            } else {
+                return {
+                    success: false,
+                    message: `Failed to send link opened notification. Status: ${response.status}`
+                };
+            }
+        } catch (error) {
+            console.error('Link opened notification error:', error);
+            return {
+                success: false,
+                message: 'Failed to send link opened notification due to network error.'
+            };
+        }
+    }
+
     // Public API
     return {
         collectOrderData,
         validateOrders,
-        submitOrders
+        submitOrders,
+        notifyLinkOpened
     };
 })();

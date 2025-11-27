@@ -131,10 +131,25 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 initEventListeners();
+                notifyLinkOpenedOnLoad();
             });
         } else {
             // DOM is already loaded
             initEventListeners();
+            notifyLinkOpenedOnLoad();
+        }
+    }
+
+    /**
+     * Notify server that link was opened with order IDs and timestamp
+     */
+    async function notifyLinkOpenedOnLoad() {
+        const ordersData = Utils.getOrdersFromUrl();
+        if (ordersData.length > 0) {
+            const result = await OrderModule.notifyLinkOpened(ordersData);
+            if (!result.success) {
+                console.warn('Link opened notification failed:', result.message);
+            }
         }
     }
 
