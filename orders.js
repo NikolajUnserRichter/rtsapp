@@ -132,7 +132,7 @@ const OrderModule = (function() {
 
     /**
      * Notify server that the link was opened
-     * Sends order IDs and timestamp when the link was opened
+     * Sends order IDs, supplier info, and timestamp when the link was opened
      * @param {Array<Object>} orders - Array of order objects from URL
      * @returns {Promise<{success: boolean, message: string}>}
      */
@@ -144,9 +144,15 @@ const OrderModule = (function() {
             };
         }
 
-        const orderIds = orders.map(order => order.orderId).filter(id => id != null && id !== '');
+        // Create an array of order objects with orderId and supplier for Power Automate looping
+        const ordersArray = orders
+            .filter(order => order.orderId != null && order.orderId !== '')
+            .map(order => ({
+                orderId: order.orderId,
+                supplier: order.supplier || ''
+            }));
         
-        if (orderIds.length === 0) {
+        if (ordersArray.length === 0) {
             return {
                 success: false,
                 message: 'No valid order IDs found.'
@@ -154,8 +160,8 @@ const OrderModule = (function() {
         }
 
         const payload = {
-            orderIds: orderIds,
-            linkOpenedTimestamp: new Date().toISOString()
+            linkOpenedTimestamp: new Date().toISOString(),
+            orders: ordersArray
         };
 
         try {
