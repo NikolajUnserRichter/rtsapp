@@ -62,6 +62,12 @@ const OrderModule = (function() {
             if (!order.deliveryDate) {
                 errors.push(`Bestellung ${order.orderId}: Lieferdatum fehlt.`);
             }
+            if (!order.wagonProfile) {
+                errors.push(`Bestellung ${order.orderId}: Wagenprofil muss ausgewählt werden.`);
+            }
+            if (!order.wagonType) {
+                errors.push(`Bestellung ${order.orderId}: Wagentyp muss ausgewählt werden.`);
+            }
         });
         
         return {

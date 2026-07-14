@@ -82,13 +82,22 @@ const UIModule = (function() {
      * @param {string} selectedValue - Value to mark as selected
      * @returns {string} HTML string of options
      */
-    function createSelectOptions(items, valueKey, textKey, selectedValue = '') {
-        return items.map(item => {
+    function createSelectOptions(items, valueKey, textKey, selectedValue = '', placeholder = null) {
+        const optionsHtml = items.map(item => {
             const value = typeof item === 'object' ? item[valueKey] : item;
             const text = typeof item === 'object' ? item[textKey] : item;
             const selected = value === selectedValue ? 'selected' : '';
             return `<option value="${Utils.escapeHtml(value)}" ${selected}>${Utils.escapeHtml(text)}</option>`;
         }).join('');
+        // When a placeholder is provided, prepend a blank, non-selectable option that is
+        // pre-selected whenever the incoming value is blank or doesn't match any item, so the
+        // browser can't auto-select the first real option and the user must choose explicitly.
+        if (placeholder !== null) {
+            const hasMatch = items.some(item => (typeof item === 'object' ? item[valueKey] : item) === selectedValue);
+            const placeholderSelected = hasMatch ? '' : 'selected';
+            return `<option value="" disabled ${placeholderSelected}>${Utils.escapeHtml(placeholder)}</option>` + optionsHtml;
+        }
+        return optionsHtml;
     }
 
     /**
@@ -107,17 +116,19 @@ const UIModule = (function() {
         const destination = Utils.escapeHtml(order.destination || '');
         
         const profileOptions = createSelectOptions(
-            APP_CONFIG.profiles, 
-            null, 
-            null, 
-            order.wagonProfile
+            APP_CONFIG.profiles,
+            null,
+            null,
+            order.wagonProfile,
+            '-- Bitte wählen --'
         );
-        
+
         const typeOptions = createSelectOptions(
-            APP_CONFIG.wagonTypes, 
-            null, 
-            null, 
-            order.wagonType
+            APP_CONFIG.wagonTypes,
+            null,
+            null,
+            order.wagonType,
+            '-- Bitte wählen --'
         );
         
         const reasonOptions = createSelectOptions(
