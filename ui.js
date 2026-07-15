@@ -4,6 +4,21 @@
  */
 
 const UIModule = (function() {
+    // Live dunning-notice reasons fetched from Dataverse at load time.
+    // Null until fetched; getReasons() falls back to the static list.
+    let runtimeReasons = null;
+
+    /**
+     * Return the reason list to render: the live Dataverse list if it was
+     * fetched successfully, otherwise the static fallback in config.
+     * @returns {Array<Object>} array of {value, text}
+     */
+    function getReasons() {
+        return (Array.isArray(runtimeReasons) && runtimeReasons.length > 0)
+            ? runtimeReasons
+            : APP_CONFIG.reasons;
+    }
+
     /**
      * Show alert message in specified container
      * @param {string} containerId - ID of the container element
@@ -132,7 +147,7 @@ const UIModule = (function() {
         );
         
         const reasonOptions = createSelectOptions(
-            APP_CONFIG.reasons,
+            getReasons(),
             'value',
             'text'
         );
@@ -245,15 +260,23 @@ const UIModule = (function() {
     /**
      * Load and display order form
      */
-    function loadOrderForm() {
+    async function loadOrderForm() {
         const ordersData = Utils.getOrdersFromUrl();
         const container = document.getElementById('orders-container');
-        
+
         if (!container) {
             console.error('Orders container not found');
             return;
         }
-        
+
+        // Load the live dunning-notice reasons before rendering the cards so
+        // the "Reason for Underdelivery" dropdown reflects Dataverse. Falls
+        // back to the static list if the fetch fails (getReasons handles it).
+        const liveReasons = await OrderModule.fetchDunningReasons();
+        if (liveReasons) {
+            runtimeReasons = liveReasons;
+        }
+
         container.innerHTML = '';
         
         if (ordersData.length === 0) {

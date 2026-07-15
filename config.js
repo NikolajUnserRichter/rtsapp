@@ -15,7 +15,8 @@ const APP_CONFIG = {
     api: {
         authFlowUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
         orderSubmitUrl: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/10/workflows/ae5f10001e5d4a929a65cd900a72c8a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Pb8UhhuhvSpACqQe6nSLJN5k0r3byGeBxKXJ8G9aMmU',
-        linkOpenedUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/aa9713b3555a45b0a5aef7f35561a667/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Up_sVwNriYWodZnl79asJHnQhEZte1zrmL_Plf2-j7Q'
+        linkOpenedUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/aa9713b3555a45b0a5aef7f35561a667/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Up_sVwNriYWodZnl79asJHnQhEZte1zrmL_Plf2-j7Q',
+        dunningReasonsUrl: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/e386642d2eb2449db36063e61260979d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WYCXHuUO-KSnMOVLgeymaZCDy2xyuRAzDqxOxnXiaqw'
     },
     
     // Business logic configuration
@@ -23,7 +24,9 @@ const APP_CONFIG = {
     
     wagonTypes: ['Offen', 'Geschlossen', 'Offen + Geschlossen'],
     
-    // Reason codes for underdelivery
+    // Reason codes for underdelivery — FALLBACK only.
+    // At runtime the live list is fetched from Dataverse via api.dunningReasonsUrl
+    // (flow 3104_flow_RTS - GetDunningReasons). This static list is used only if that fetch fails.
     reasons: [
         { value: 'None', text: '— Keine Unterlieferung —' },
         { value: '05', text: '05 Falsche Waggongattung angeliefert' },

@@ -32,7 +32,7 @@
         if (result.success) {
             // Show main application
             UIModule.showMainApp();
-            UIModule.loadOrderForm();
+            await UIModule.loadOrderForm();
         } else {
             // Show error message
             UIModule.showAlert('login-alert', result.message, 'danger');

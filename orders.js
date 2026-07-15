@@ -200,11 +200,47 @@ const OrderModule = (function() {
         }
     }
 
+    /**
+     * Fetch the live dunning-notice reasons from Dataverse via the
+     * GetDunningReasons flow. Returns an array of {value, text, cluster}
+     * ordered by code, or null on any failure (caller falls back to
+     * the static APP_CONFIG.reasons list).
+     * @returns {Promise<Array<Object>|null>}
+     */
+    async function fetchDunningReasons() {
+        const url = APP_CONFIG.api.dunningReasonsUrl;
+        if (!url) return null;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+
+            if (!response.ok) {
+                console.warn(`Dunning reasons fetch failed (HTTP ${response.status}); using fallback list.`);
+                return null;
+            }
+
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0) {
+                return data;
+            }
+            console.warn('Dunning reasons response was empty; using fallback list.');
+            return null;
+        } catch (error) {
+            console.warn('Dunning reasons fetch error; using fallback list.', error);
+            return null;
+        }
+    }
+
     // Public API
     return {
         collectOrderData,
         validateOrders,
         submitOrders,
-        notifyLinkOpened
+        notifyLinkOpened,
+        fetchDunningReasons
     };
 })();
