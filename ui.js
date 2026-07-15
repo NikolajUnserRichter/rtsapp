@@ -181,16 +181,21 @@ const UIModule = (function() {
                     <div class="col-12 mt-3">
                         <h6 class="text-primary border-bottom pb-2">📍 Departure Time Slots (${departure})</h6>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="departure-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
-                        <select class="form-select" id="departure-arrival-slot-${id}" name="departure-arrival-slot-${id}" 
+                        <select class="form-select" id="departure-arrival-slot-${id}" name="departure-arrival-slot-${id}"
                                 required aria-required="true">
                             ${arrivalOptions}
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label for="departure-date-${id}" class="form-label">Departure Date</label>
+                        <input type="date" class="form-control" id="departure-date-${id}" name="departure-date-${id}"
+                               value="${Utils.convertDateToISO(order.departureDate)}" aria-label="Departure Date">
+                    </div>
+                    <div class="col-md-4">
                         <label for="departure-time-${id}" class="form-label">Departure Time (15min)</label>
-                        <select class="form-select" id="departure-time-${id}" name="departure-time-${id}" 
+                        <select class="form-select" id="departure-time-${id}" name="departure-time-${id}"
                                 required aria-required="true">
                             ${departureOptions}
                         </select>

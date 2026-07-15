@@ -23,6 +23,7 @@ const OrderModule = (function() {
                 wagonProfile: document.getElementById(`profile-${id}`)?.value || '',
                 wagonType: document.getElementById(`type-${id}`)?.value || '',
                 departureArrivalSlot: document.getElementById(`departure-arrival-slot-${id}`)?.value || '',
+                departureDate: document.getElementById(`departure-date-${id}`)?.value || '',
                 departureTime: document.getElementById(`departure-time-${id}`)?.value || '',
                 destinationArrivalSlot: document.getElementById(`destination-arrival-slot-${id}`)?.value || '',
                 destinationDepartureTime: document.getElementById(`destination-departure-time-${id}`)?.value || '',
