@@ -148,6 +148,7 @@ const Utils = {
             cw: order.CW || order.cw,
             wagons: order.RequiredWagons || order.wagons,
             transportDate: (order.Transportdatum || order.transportDate || '').trim(),
+            departureDate: (order.DepartureDate || order.departureDate || '').trim(),
             wagonProfile: order.WagonProfile || order.wagonProfile,
             wagonType: order.WagonType || order.wagonType,
             departure: departure,
