@@ -18,6 +18,7 @@ const OrderModule = (function() {
             const orderData = {
                 orderId: id,
                 wagons: parseInt(document.getElementById(`wagons-${id}`)?.value || '1', 10),
+                orderedWagons: parseInt(card.getAttribute('data-ordered-wagons') || '0', 10),
                 transportDate: document.getElementById(`date-${id}`)?.value || '',
                 deliveryDate: document.getElementById(`delivery-date-${id}`)?.value || '',
                 wagonProfile: document.getElementById(`profile-${id}`)?.value || '',
@@ -68,6 +69,16 @@ const OrderModule = (function() {
             }
             if (!order.wagonType) {
                 errors.push(`Bestellung ${order.orderId}: Wagentyp muss ausgewählt werden.`);
+            }
+            // Underdelivery: if the confirmed wagon count is below the originally
+            // ordered amount, Reason for Underdelivery and Comment are mandatory.
+            if (order.orderedWagons && order.wagons < order.orderedWagons) {
+                if (!order.reasonUnderdelivery || !order.reasonUnderdelivery.trim()) {
+                    errors.push(`Bestellung ${order.orderId}: Bei reduzierter Wagenanzahl ist ein Grund für die Unterlieferung erforderlich.`);
+                }
+                if (!order.comment || !order.comment.trim()) {
+                    errors.push(`Bestellung ${order.orderId}: Bei reduzierter Wagenanzahl ist ein Kommentar erforderlich.`);
+                }
             }
         });
         
