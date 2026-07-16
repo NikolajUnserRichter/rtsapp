@@ -146,11 +146,15 @@ const UIModule = (function() {
             '-- Bitte wählen --'
         );
         
-        const reasonOptions = createSelectOptions(
-            getReasons(),
-            'value',
-            'text'
-        );
+        // Reason for Underdelivery is optional. Prepend a blank, selectable,
+        // pre-selected option so an untouched dropdown submits an empty reason
+        // instead of silently defaulting to the first real reason.
+        const reasonOptions = '<option value="" selected></option>' +
+            createSelectOptions(
+                getReasons(),
+                'value',
+                'text'
+            );
         
         const arrivalOptions = createSelectOptions(
             arrivalSlots,
@@ -242,7 +246,7 @@ const UIModule = (function() {
                     
                     <div class="col-md-6 mt-3">
                         <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
-                        <select class="form-select" id="reason-${id}" name="reason-${id}" required aria-required="true">
+                        <select class="form-select" id="reason-${id}" name="reason-${id}">
                             ${reasonOptions}
                         </select>
                     </div>
