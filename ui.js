@@ -169,7 +169,7 @@ const UIModule = (function() {
         );
         
         return `
-            <div class="order-card" data-order-id="${id}" data-ordered-wagons="${order.wagons || 1}">
+            <div class="order-card" data-order-id="${id}" data-ordered-wagons="${order.wagons || 1}" data-original-transport-date="${Utils.convertDateToISO(order.transportDate)}">
                 <h5>Order ID: ${id} | Supplier: ${supplier} | Route: ${route}</h5>
                 <p class="mb-3 text-muted small">KW: ${cw}</p>
                 <div class="row g-3">

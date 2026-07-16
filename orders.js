@@ -20,6 +20,7 @@ const OrderModule = (function() {
                 wagons: parseInt(document.getElementById(`wagons-${id}`)?.value || '1', 10),
                 orderedWagons: parseInt(card.getAttribute('data-ordered-wagons') || '0', 10),
                 transportDate: document.getElementById(`date-${id}`)?.value || '',
+                originalTransportDate: card.getAttribute('data-original-transport-date') || '',
                 deliveryDate: document.getElementById(`delivery-date-${id}`)?.value || '',
                 wagonProfile: document.getElementById(`profile-${id}`)?.value || '',
                 wagonType: document.getElementById(`type-${id}`)?.value || '',
@@ -70,14 +71,18 @@ const OrderModule = (function() {
             if (!order.wagonType) {
                 errors.push(`Bestellung ${order.orderId}: Wagentyp muss ausgewählt werden.`);
             }
-            // Underdelivery: if the confirmed wagon count is below the originally
-            // ordered amount, Reason for Underdelivery and Comment are mandatory.
-            if (order.orderedWagons && order.wagons < order.orderedWagons) {
+            // If the supplier edits the wagon count or the transport date away from
+            // what was ordered, Reason for Underdelivery and Comment are mandatory.
+            const wagonsChanged = !!order.orderedWagons && order.wagons !== order.orderedWagons;
+            const transportDateChanged = !!order.originalTransportDate &&
+                order.transportDate !== order.originalTransportDate;
+
+            if (wagonsChanged || transportDateChanged) {
                 if (!order.reasonUnderdelivery || !order.reasonUnderdelivery.trim()) {
-                    errors.push(`Bestellung ${order.orderId}: Bei reduzierter Wagenanzahl ist ein Grund für die Unterlieferung erforderlich.`);
+                    errors.push(`Bestellung ${order.orderId}: Bei geänderter Wagenanzahl oder geändertem Transportdatum ist ein Grund für die Unterlieferung erforderlich.`);
                 }
                 if (!order.comment || !order.comment.trim()) {
-                    errors.push(`Bestellung ${order.orderId}: Bei reduzierter Wagenanzahl ist ein Kommentar erforderlich.`);
+                    errors.push(`Bestellung ${order.orderId}: Bei geänderter Wagenanzahl oder geändertem Transportdatum ist ein Kommentar erforderlich.`);
                 }
             }
         });
