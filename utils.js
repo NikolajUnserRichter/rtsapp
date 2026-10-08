@@ -107,19 +107,23 @@ const Utils = {
                 return decoded;
             }
             
-            // Check if it looks like base64 (only contains base64 characters and has proper length)
-            // Base64 strings must have length divisible by 4 (with padding)
-            if (/^[A-Za-z0-9+/]+={0,2}$/.test(encodedData) && encodedData.length % 4 === 0 && encodedData.length >= 4) {
+            // Base64 (as sent by the flows). The flows do not URL-encode the value, so a '+' in the
+            // link arrives here as a space (URLSearchParams decodes '+' to ' '). Restore it, accept the
+            // URL-safe alphabet (-, _) and missing padding, and decode the bytes as UTF-8 (umlauts).
+            const candidate = this.normalizeBase64(encodedData);
+            if (candidate) {
                 try {
-                    const decoded = atob(encodedData);
-                    // Verify the decoded result doesn't contain replacement characters (�)
-                    // which indicate invalid UTF-8 sequences from incorrect base64 decoding
-                    if (decoded.includes('\uFFFD')) {
-                        // Contains replacement characters, likely not valid base64
-                        return encodedData;
+                    const binary = atob(candidate);
+                    let decoded = binary;
+                    if (typeof TextDecoder !== 'undefined') {
+                        const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+                        decoded = new TextDecoder('utf-8').decode(bytes);
                     }
-                    // Base64 decode succeeded and result looks reasonable
-                    return decoded;
+                    // Base64 decode succeeded and result looks like JSON
+                    const trimmed = decoded.trim();
+                    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                        return decoded;
+                    }
                 } catch (base64Error) {
                     // Base64 decode failed, fall through to return original
                 }
@@ -131,6 +135,21 @@ const Utils = {
             console.error('Failed to decode data:', error);
             return encodedData; // Return original if all else fails
         }
+    },
+
+    /**
+     * Turn a link value into strict base64, or return null if it cannot be base64
+     * @param {string} value - Raw value from the URL
+     * @returns {string|null} Padded standard base64 string or null
+     */
+    normalizeBase64(value) {
+        if (!value) return null;
+        let b64 = value.trim().replace(/ /g, '+').replace(/-/g, '+').replace(/_/g, '/');
+        if (!/^[A-Za-z0-9+/]+={0,2}$/.test(b64)) return null;
+        b64 = b64.replace(/=+$/, '');
+        if (b64.length % 4 === 1) return null;
+        while (b64.length % 4 !== 0) b64 += '=';
+        return b64;
     },
 
     /**

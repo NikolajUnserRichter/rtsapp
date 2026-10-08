@@ -65,6 +65,13 @@ const OrderModule = (function() {
             if (!order.deliveryDate) {
                 errors.push(`Bestellung ${order.orderId}: Lieferdatum fehlt.`);
             }
+            // Dates come from <input type="date"> as yyyy-MM-dd, so string comparison is chronological
+            if (order.deliveryDate && order.transportDate && order.deliveryDate < order.transportDate) {
+                errors.push(`Bestellung ${order.orderId}: Das Lieferdatum (Senke) darf nicht vor dem Transportdatum liegen.`);
+            }
+            if (order.deliveryDate && order.departureDate && order.deliveryDate < order.departureDate) {
+                errors.push(`Bestellung ${order.orderId}: Das Lieferdatum (Senke) darf nicht vor dem Abfahrtsdatum liegen.`);
+            }
             if (!order.wagonProfile) {
                 errors.push(`Bestellung ${order.orderId}: Wagenprofil muss ausgewählt werden.`);
             }

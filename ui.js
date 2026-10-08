@@ -227,7 +227,7 @@ const UIModule = (function() {
                     <div class="col-md-4">
                         <label for="delivery-date-${id}" class="form-label">Delivery Date</label>
                         <input type="date" class="form-control" id="delivery-date-${id}" name="delivery-date-${id}" 
-                               value="${Utils.convertDateToISO(order.deliveryDate)}" required aria-required="true">
+                               value="${Utils.convertDateToISO(order.deliveryDate)}" min="${Utils.convertDateToISO(order.transportDate)}" required aria-required="true">
                     </div>
                     <div class="col-md-4">
                         <label for="destination-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
