@@ -10,13 +10,31 @@
  * 4. Using OAuth or similar authentication flows
  */
 
+// Flow endpoints per environment. The sending flows (F10/F21/F22/F41) add &env=<first 8 characters of
+// the environment id> to the link. PROD app environment = 28ade5d3; no or unknown env = DEV, so older links keep working.
+const RTS_ENV = /^28ade5d3/i.test(new URLSearchParams(window.location.search).get('env') || '') ? 'prod' : 'dev';
+const ENDPOINTS = {
+    dev: {
+        auth: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/17/workflows/05f3abfc061845e5a32f218dae03a4c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QbpMBZDp4Mo6HqUS6tXGIwNeZW41ikD0tOeDlyeqU3E',
+        orderSubmit: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/10/workflows/ae5f10001e5d4a929a65cd900a72c8a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Pb8UhhuhvSpACqQe6nSLJN5k0r3byGeBxKXJ8G9aMmU',
+        linkOpened: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/30/workflows/89c99df931084816b7f93fd45b883d64/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Tl7lG3HhIiO1yTemexP3Y4Ud5yb8koqBK7fk38Lb3Ro',
+        dunningReasons: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/e386642d2eb2449db36063e61260979d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WYCXHuUO-KSnMOVLgeymaZCDy2xyuRAzDqxOxnXiaqw',
+    },
+    prod: {
+        auth: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/08/workflows/35c2caca7ded4d9c9de850a53cc6b18c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yQXA9VOaBvgB7Brx6BpTCdPO7f9uTXl2Ye2PCQaUA5A',
+        orderSubmit: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/19/workflows/c36e15c066a441c7a191c795914dfabf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=r3YhtkDgMqrGo--YkKcFlDSxk3s1MNUeBbdhSILi_8A',
+        linkOpened: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/24/workflows/87ea10bb96e5482bac24f7917429d11c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t3dgwqs3C8OkUubJ363hrmx559IGMkUzF8qB1vJ2Ouw',
+        dunningReasons: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/09/workflows/e78222f842354579ade3bb9db6b06384/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rzY1EyyoxDpxBbv4aBtw_34BWrTUPYMLyooApZkBfik',
+    },
+}[RTS_ENV];
+
 const APP_CONFIG = {
     // API endpoints - SECURITY: These should be proxied through a backend in production
     api: {
-        authFlowUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
-        orderSubmitUrl: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/10/workflows/ae5f10001e5d4a929a65cd900a72c8a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Pb8UhhuhvSpACqQe6nSLJN5k0r3byGeBxKXJ8G9aMmU',
-        linkOpenedUrl: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/aa9713b3555a45b0a5aef7f35561a667/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Up_sVwNriYWodZnl79asJHnQhEZte1zrmL_Plf2-j7Q',
-        dunningReasonsUrl: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/e386642d2eb2449db36063e61260979d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WYCXHuUO-KSnMOVLgeymaZCDy2xyuRAzDqxOxnXiaqw'
+        authFlowUrl: ENDPOINTS.auth,
+        orderSubmitUrl: ENDPOINTS.orderSubmit,
+        linkOpenedUrl: ENDPOINTS.linkOpened,
+        dunningReasonsUrl: ENDPOINTS.dunningReasons
     },
     
     // Business logic configuration

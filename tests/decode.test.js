@@ -58,5 +58,16 @@ for (const c of cases) {
         if (!ok) failed++;
     }
 }
-console.log(failed ? `\n${failed} test(s) failed` : '\nall decoding tests passed');
+
+// Endpoint per environment: &env=28ade5d3 (PROD) -> PROD flows, anything else -> DEV flows
+for (const [search, host] of [['?data=x', 'c06da98d'], ['?data=x&env=c06da98d', 'c06da98d'], ['?data=x&env=28ade5d3', '28ade5d3'], ['?env=28ADE5D3&data=x', '28ade5d3']]) {
+    const ctx = { window: { location: { search } }, URLSearchParams };
+    vm.createContext(ctx);
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'config.js'), 'utf8') + '\n;this.__C = APP_CONFIG;', ctx);
+    const api = ctx.__C.api;
+    const ok = ['authFlowUrl', 'orderSubmitUrl', 'linkOpenedUrl', 'dunningReasonsUrl'].every(k => api[k].startsWith('https://' + host));
+    console.log(`${ok ? 'PASS' : 'FAIL'}  endpoints  ${search} -> ${host}`);
+    if (!ok) failed++;
+}
+console.log(failed ? `\n${failed} test(s) failed` : '\nall tests passed');
 process.exit(failed ? 1 : 0);
