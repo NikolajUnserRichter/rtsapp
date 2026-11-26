@@ -182,8 +182,11 @@ const Utils = {
      * @returns {Array<Object>} Array of normalized order objects
      */
     getOrdersFromUrl() {
+        // data comes after '#' in new links (…/v2/?env=…#data=…): the part after '#' is never sent to the server,
+        // so long orders do not hit GitHub Pages' request size limit (400). Old links with ?data= still work.
         const params = new URLSearchParams(window.location.search);
-        const encodedData = params.get('data');
+        const hash = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+        const encodedData = params.get('data') || hash.get('data');
         
         try {
             const jsonString = this.decodeUrlData(encodedData);

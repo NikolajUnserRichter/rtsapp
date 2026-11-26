@@ -14,8 +14,8 @@ const eq = (name, got, want) => {
 };
 
 // the link exactly as F10 builds it, decoded by the shared utils.js
-function ordersFromUrl(search) {
-    const ctx = { console: { log() {}, warn() {}, error() {} }, window: { location: { search } }, URLSearchParams,
+function ordersFromUrl(search, hash = '') {
+    const ctx = { console: { log() {}, warn() {}, error() {} }, window: { location: { search, hash } }, URLSearchParams,
                   atob: s => Buffer.from(String(s), 'base64').toString('latin1'), TextDecoder, Uint8Array };
     vm.createContext(ctx);
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'utils.js'), 'utf8') + '\n;this.__U = Utils;', ctx);
@@ -30,6 +30,14 @@ const search = '?data=' + encodeURIComponent(Buffer.from(JSON.stringify(link), '
 const orders = M.fromLink(ordersFromUrl(search));
 
 eq('link: transports without an order id are dropped', orders.length, 2);
+
+// data after '#' (new links: ?env=…#data=…) – never sent to the server, so big orders do not hit the 400 size limit
+const b64link = encodeURIComponent(Buffer.from(JSON.stringify(link), 'utf8').toString('base64'));
+eq('link: #data= gives the same orders as ?data=', M.fromLink(ordersFromUrl('?env=c06da98d', '#data=' + b64link)), orders);
+eq('link: ?data= wins over #data=', M.fromLink(ordersFromUrl(search, '#data=xxx')).length, 2);
+const big = Array.from({ length: 40 }, (_, i) => ({ orderId: 'WP-' + (3000 + i), supplier: 'ARS Altmann', cw: 49.0, wagons: 24, transportDate: '30.11.2026', wagonProfile: 'G1', wagonType: 'Offen + Geschlossen', Departure: 'WERK DINGOLFING', Destination: 'ZEEBRUGGE TERMINAL', departureDate: '30.11.2026' }));
+const bigHash = '#data=' + encodeURIComponent(Buffer.from(JSON.stringify(big), 'utf8').toString('base64'));
+eq('link: 40 transports after # (> 8 KB) are all read', [bigHash.length > 8192, M.fromLink(ordersFromUrl('?env=28ade5d3', bigHash)).length], [true, 40]);
 eq('link: id, supplier, week, route, date, ordered wagons',
     [orders[0].id, orders[0].supplier, orders[0].cw, orders[0].plant, orders[0].dest, orders[0].date, orders[0].ordered],
     ['WP-1501', 'Müller Rail', '47', 'DINGOLFING', 'Bremerhaven Süd', '2026-11-16', 20]);
